@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watch": "webpack-dev-server",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src"
   },
   "repository": {
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/ninislope/autoetd-clone#readme",
   "devDependencies": {
+    "@hot-loader/react-dom": "^16.10.2",
     "@types/react": "^16.9.9",
     "@types/react-dom": "^16.9.2",
     "@types/react-redux": "^7.1.5",
@@ -31,11 +33,14 @@
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.1.2",
     "fork-ts-checker-webpack-plugin": "^1.5.1",
+    "html-webpack-plugin": "^3.2.0",
     "prettier": "^1.18.2",
+    "react-hot-loader": "^4.12.15",
     "ts-loader": "^6.2.0",
     "typescript": "^3.6.4",
     "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.9"
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-server": "^3.8.2"
   },
   "dependencies": {
     "react": "^16.10.2",

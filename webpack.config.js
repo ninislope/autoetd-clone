@@ -1,5 +1,7 @@
 // @ts-check
 
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
@@ -25,13 +27,23 @@ const config = {
         ],
     },
     resolve: {
-        extensions: [".ts", ".tsx"],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+        alias: {
+            "react-dom": "@hot-loader/react-dom",
+        },
     },
     plugins: [
+        new webpack.NamedModulesPlugin(),
+        new HtmlWebpackPlugin({
+            template: "./public/index.html",
+        }),
         new ForkTsCheckerWebpackPlugin({
             eslint: true,
         }),
     ],
+    devServer: {
+        hot: true,
+    },
 };
 
 module.exports = config;
