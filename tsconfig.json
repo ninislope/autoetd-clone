@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "incremental": true,
+        "jsx": "react",
+        "newLine": "LF"
+    },
+    "exclude": ["node_modules"]
+}
