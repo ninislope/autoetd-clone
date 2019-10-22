@@ -1,0 +1,19 @@
+{
+  "name": "autoetd-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ninislope/autoetd-clone.git"
+  },
+  "author": "ninislope",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ninislope/autoetd-clone/issues"
+  },
+  "homepage": "https://github.com/ninislope/autoetd-clone#readme"
+}
