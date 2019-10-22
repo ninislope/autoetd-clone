@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/ninislope/autoetd-clone#readme",
   "devDependencies": {
+    "@types/react": "^16.9.9",
+    "@types/react-dom": "^16.9.2",
+    "@types/react-redux": "^7.1.5",
     "@typescript-eslint/eslint-plugin": "^2.5.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-typescript": "^5.0.0",
@@ -28,5 +31,12 @@
     "eslint-plugin-react-hooks": "^2.1.2",
     "prettier": "^1.18.2",
     "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "react-redux": "^7.1.1",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.1.1"
   }
 }
