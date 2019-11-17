@@ -5,12 +5,16 @@ import { render } from "react-dom";
 import { Provider } from "react-redux";
 import App from "./components/App";
 import store from "./store";
+import DevTools from "./components/DevTools";
 
 document.addEventListener("DOMContentLoaded", () => {
     const HotApp = hot(module)(App);
     render(
         <Provider store={store}>
-            <HotApp />
+            <>
+                <HotApp />
+                <DevTools />
+            </>
         </Provider>,
         document.querySelector("#root"),
     );

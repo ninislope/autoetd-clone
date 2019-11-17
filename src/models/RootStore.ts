@@ -1,5 +1,5 @@
-import { ExampleStore } from "./ExampleStore";
+import { MainStore } from "./MainStore";
 
 export interface RootStore {
-    example: ExampleStore;
+    readonly main: MainStore;
 }

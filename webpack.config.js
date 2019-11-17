@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-/** @type {import("webpack").Configuration} */
+/** @type {import("webpack").Configuration & {devServer: any}} */
 const config = {
     context: __dirname,
     mode: "development",
@@ -41,6 +41,7 @@ const config = {
             eslint: true,
         }),
     ],
+    devtool: "eval-source-map",
     devServer: {
         hot: true,
     },

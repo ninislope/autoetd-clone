@@ -13,9 +13,7 @@ export interface StandardAction<Payload, Type = string> {
 }
 
 /** Flux Standard Action (type任意) */
-export type PartialStandardAction<Payload, Type = string> = Partial<
-    StandardAction<Payload, Type>
->;
+export type PartialStandardAction<Payload, Type = string> = Partial<StandardAction<Payload, Type>>;
 
 /** あるactionに対してのreducer */
 export type ReduceHandler<State, Payload = void> = (
@@ -59,9 +57,7 @@ export function reduxHelper<State>(initialState?: State) {
         for (let i = 0; i < names.length; ++i) {
             const name = names[i];
             const type = `${baseName}/${name}`;
-            const { actionCreator, reduceHandler } = actionCreatorsSource[
-                name
-            ].apply({ type });
+            const { actionCreator, reduceHandler } = actionCreatorsSource[name].apply({ type });
             actionCreators[name] = actionCreator;
             actionTypes[name] = type;
             reducers[type] = reduceHandler;
@@ -74,9 +70,7 @@ export function reduxHelper<State>(initialState?: State) {
             // eslint-disable-line no-shadow
             if (!action) return state;
             const targetReducer = reducers[action.type];
-            return targetReducer
-                ? targetReducer(state, action.payload, action)
-                : state;
+            return targetReducer ? targetReducer(state, action.payload, action) : state;
         }
         return {
             actionCreators,
@@ -92,18 +86,13 @@ export function reduxHelper<State>(initialState?: State) {
     /**
      * reducerの伴わない単体action
      */
-    function action<Payload>(): (
-        payload: Payload,
-    ) => { type: string; payload: Payload } & StandardAction<Payload>;
+    function action<Payload>(): (payload: Payload) => { type: string; payload: Payload } & StandardAction<Payload>;
     /**
      * reducerの伴わない単体action
      * @param actionMapper actionの形式変更関数
      */
     function action<AM extends ActionMapper>(actionMapper: AM): AM;
-    function action<AM extends ActionMapper>(
-        this: CreateHelperThis,
-        actionMapper?: AM,
-    ) {
+    function action<AM extends ActionMapper>(this: CreateHelperThis, actionMapper?: AM) {
         return function createAction(this: CreateHelperThis) {
             const actionCreator = actionMapper
                 ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,18 +112,14 @@ export function reduxHelper<State>(initialState?: State) {
      * reducerつきのaction
      * @param reduceHandler reducer
      */
-    function reduceAction(
-        reduceHandler: ReduceHandler<State>,
-    ): () => { type: string } & StandardAction<void>;
+    function reduceAction(reduceHandler: ReduceHandler<State>): () => { type: string } & StandardAction<void>;
     /**
      * reducerつきのaction
      * @param reduceHandler reducer
      */
     function reduceAction<Payload>(
         reduceHandler: ReduceHandler<State, Payload>,
-    ): (
-        payload: Payload,
-    ) => { type: string; payload: Payload } & StandardAction<Payload>;
+    ): (payload: Payload) => { type: string; payload: Payload } & StandardAction<Payload>;
     /**
      * reducerつきのaction
      * @param actionMapper actionの形式変更関数
@@ -150,14 +135,8 @@ export function reduxHelper<State>(initialState?: State) {
     ) {
         return function createReduceAction(this: CreateHelperThis) {
             const [actionMapper, reduceHandler] = maybeReduceHandler
-                ? [
-                      actionMapperOrReduceHandler as AM,
-                      maybeReduceHandler as ReduceHandler<State>,
-                  ]
-                : [
-                      undefined,
-                      actionMapperOrReduceHandler as ReduceHandler<State>,
-                  ];
+                ? [actionMapperOrReduceHandler as AM, maybeReduceHandler as ReduceHandler<State>]
+                : [undefined, actionMapperOrReduceHandler as ReduceHandler<State>];
             const actionCreator = actionMapper
                 ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (...args: any[]) => ({
@@ -181,8 +160,6 @@ export function reduxHelper<State>(initialState?: State) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ActionOf<
-    T extends { [name: string]: (...args: any[]) => unknown }
-> = {
+export type ActionOf<T extends { [name: string]: (...args: any[]) => unknown }> = {
     [Action in keyof T]: ReturnType<T[Action]>;
 }[keyof T];

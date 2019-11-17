@@ -1,6 +1,9 @@
-import { combineReducers } from "redux";
-import example from "./example";
+import { combineReducers, Reducer } from "redux";
+import main from "./main";
+import { RootStore } from "../models";
 
-export default combineReducers({
-    example,
+const reducer: Reducer<RootStore> = combineReducers({
+    main,
 });
+
+export default reducer;

@@ -1,36 +1,21 @@
-import React, { useReducer } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import pickStore from "../pickStore";
-import { countup } from "../modules/example";
+import * as scenes from "./Scenes";
+import Fill from "./Fill";
 
-const mapStateToProps = pickStore("example", ["count"]);
-const mapDispatchToProps = {
-    countup,
-};
+const mapStateToProps = pickStore("main", ["currentScene"]);
 
 type MappedState = ReturnType<typeof mapStateToProps>;
-type MappedDispatch = typeof mapDispatchToProps;
 
 // eslint-disable-next-line no-shadow
-const App: React.FC<MappedState & MappedDispatch> = ({ count, countup }) => {
-    const [c2, c2up] = useReducer((c: number) => c + 1, 0);
+const App: React.FC<MappedState> = ({ currentScene }) => {
+    const Scene = scenes[currentScene];
     return (
-        <div>
-            <button type="button" onClick={() => countup()}>
-                + count
-            </button>
-            {count}
-            <hr />
-            <button type="button" onClick={() => c2up(1)}>
-                + count
-            </button>
-            {c2}
-            <hr />
-        </div>
+        <Fill width={100} height={100} left={0} top={0} background="black">
+            <Scene />
+        </Fill>
     );
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(App);
+export default connect(mapStateToProps)(App);
