@@ -7,6 +7,8 @@ export interface ActorVariable {
     readonly ap: number;
     /** Estrus(発情) Point */
     readonly ep: number;
+    /** Registance(抵抗) Point */
+    readonly rp: number;
 }
 
 export type ActorVariableKey = keyof ActorVariable;
@@ -16,4 +18,5 @@ export const zeroActorVariable: ActorVariable = {
     mp: 0,
     ap: 0,
     ep: 0,
+    rp: 0,
 };

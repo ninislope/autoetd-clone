@@ -44,6 +44,7 @@ export const personSample = (id: number, name: string): Person => ({
         mp: 10,
         ap: 0,
         ep: 0,
+        rp: 0,
     },
     sexualStatus: {
         common: zeroCommon,
