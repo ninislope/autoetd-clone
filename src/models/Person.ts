@@ -2,7 +2,7 @@ import { Character } from "./Character";
 import { CharacterType } from "./CharacterType";
 import { ActorVariable } from "./ActorVariable";
 import { ActorSexualStatus } from "./ActorSexualStatus";
-import { ActorStates } from "./ActorStates";
+import { ActorStates } from "./StateLogic";
 
 export interface Person {
     readonly id: number;

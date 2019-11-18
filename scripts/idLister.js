@@ -11,7 +11,16 @@ const camelcase = require("camelcase");
  * @property {string} idsFile
  * @property {string} [typeName]
  * @property {(name: string) => string} [idName]
+ * @property {(name: FileSystemObject) => boolean} [includes]
  */
+
+/**
+ *
+ * @param {FileSystemObject} file
+ */
+function exceptHelper(file) {
+    return file.basename().path !== "helper";
+}
 
 /** @type {NeedId[]} */
 const needIds = [
@@ -23,14 +32,33 @@ const needIds = [
     {
         path: "src/masters/strategy/action",
         idsFile: "src/models/BattleLogic/StrategyActionId.ts",
+        includes: exceptHelper,
     },
     {
         path: "src/masters/strategy/condition",
         idsFile: "src/models/BattleLogic/StrategyConditionId.ts",
+        includes: exceptHelper,
     },
     {
         path: "src/masters/strategy/targetting",
         idsFile: "src/models/BattleLogic/StrategyTargettingId.ts",
+        includes: exceptHelper,
+    },
+    {
+        path: "src/masters/state/normal",
+        idsFile: "src/models/StateLogic/NormalStateId.ts",
+    },
+    {
+        path: "src/masters/state/sexual",
+        idsFile: "src/models/StateLogic/SexualStateId.ts",
+    },
+    {
+        path: "src/masters/state/constitution",
+        idsFile: "src/models/StateLogic/ConstitutionStateId.ts",
+    },
+    {
+        path: "src/masters/state/hidden",
+        idsFile: "src/models/StateLogic/HiddenStateId.ts",
     },
 ];
 
@@ -39,10 +67,11 @@ for (const needId of needIds) {
     const idFile = new FileSystemObject(needId.idsFile);
     const idNameTrans = needId.idName || (name => name);
     const typeName = needId.typeName || idFile.basename().path.replace(/\.tsx?$/, "");
+    const includes = needId.includes || (() => true);
 
     const ids = files
         .childrenSync()
-        .filter(entry => entry.basename().path !== "index.ts")
+        .filter(entry => entry.basename().path !== "index.ts" && includes(entry))
         .map(entry => idNameTrans(entry.basename().path.replace(/\.tsx?$/, "")));
 
     const src = `export type ${typeName} = ${ids.map(id => `"${id}"`).join(" | ")};\n`;

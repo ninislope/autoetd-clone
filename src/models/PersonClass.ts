@@ -4,7 +4,7 @@ import { Person } from "./Person";
 import { CharacterClass } from "./CharacterClass";
 import { ActorVariable } from "./ActorVariable";
 import { ActorSexualStatus } from "./ActorSexualStatus";
-import { ActorStates } from "./ActorStates";
+import { ActorStates } from "./StateLogic";
 
 export type CharacterClassMap = { [type in CharacterType]?: CharacterClass<type> } & {
     normal: CharacterClass<"normal">;

@@ -16,6 +16,7 @@ const root = new FileSystemObject("src");
  * @typedef NeedIndexExports
  * @property {string} path
  * @property {"exports"} type
+ * @property {(file: FileSystemObject) => boolean} [includes]
  */
 
 /**
@@ -23,6 +24,7 @@ const root = new FileSystemObject("src");
  * @property {string} path
  * @property {"defaults"} type
  * @property {(name: string) => string} [name]
+ * @property {(file: FileSystemObject) => boolean} [includes]
  */
 
 /**
@@ -31,7 +33,16 @@ const root = new FileSystemObject("src");
  * @property {"readonlyInterface"} type
  * @property {(name: string) => string} [name]
  * @property {string} [exportName]
+ * @property {(file: FileSystemObject) => boolean} [includes]
  */
+
+/**
+ *
+ * @param {FileSystemObject} file
+ */
+function exceptHelper(file) {
+    return file.basename().path !== "helper";
+}
 
 /** @type {NeedIndex[]} */
 const needIndexes = [
@@ -54,11 +65,17 @@ const needIndexes = [
         name: name => camelcase(name.replace(/Scene$/, "")),
     },
     { path: "models/BattleLogic", type: "exports" },
+    { path: "models/StateLogic", type: "exports" },
     { path: "models", type: "exports" },
     { path: "util", type: "exports" },
-    { path: "masters/strategy/condition", type: "exports" },
-    { path: "masters/strategy/targetting", type: "exports" },
-    { path: "masters/strategy/action", type: "exports" },
+    { path: "masters/state", type: "exports" },
+    { path: "masters/state/normal", type: "exports" },
+    { path: "masters/state/sexual", type: "exports" },
+    { path: "masters/state/constitution", type: "exports" },
+    { path: "masters/state/hidden", type: "exports" },
+    { path: "masters/strategy/condition", type: "exports", includes: exceptHelper },
+    { path: "masters/strategy/targetting", type: "exports", includes: exceptHelper },
+    { path: "masters/strategy/action", type: "exports", includes: exceptHelper },
 ];
 
 /** @type {{[ext: string]: boolean}} */
@@ -84,7 +101,10 @@ function entryName(entry) {
 
 for (const needIndex of needIndexes) {
     const needIndexPath = root.join(needIndex.path);
-    const entries = needIndexPath.filteredChildrenSync(isAllowedEntry).map(entry => needIndexPath.relative(entry));
+    const includes = needIndex.includes || (() => true);
+    const entries = needIndexPath
+        .filteredChildrenSync(entry => isAllowedEntry(entry) && includes(entry))
+        .map(entry => needIndexPath.relative(entry));
     if (needIndex.type === "exports") {
         const src = entries.map(entry => `export * from "./${entryName(entry)}";\n`).join("");
         const indexEntry = needIndexPath.join("index.ts");

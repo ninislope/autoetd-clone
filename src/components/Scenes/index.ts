@@ -6,4 +6,12 @@ import makeCharacter from "./MakeCharacterScene";
 import start from "./StartScene";
 import town from "./TownScene";
 
-export { battle, dashboard, dungeon, field, makeCharacter, start, town };
+export {
+    battle,
+    dashboard,
+    dungeon,
+    field,
+    makeCharacter,
+    start,
+    town,
+}

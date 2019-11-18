@@ -9,6 +9,11 @@ export const attack: StrategyAction<[number | void]> = {
         targets.reduce(
             (field, targetObj) => {
                 const target = new BattlerClass(targetObj);
+                // 感じた部分で弱体化・弱体化数値が一定以上で確率(抵抗値で上下？)で失敗
+                // 疼き・擦れ（乳首・クリ・おまんこ･ふともも等）・揺れ（おっぱい）・ゆるみ（尿道・乳首）・感じ（膀胱）
+                // 運動強度で確率が上がる
+                // 二カ所以上だと格段に弱体化が跳ね上がる
+                // 発情は集中力に寄与＆一定確率でうずいて弱体化
                 // TODO: 失敗判定など
                 const success = battler.person.variable.ep - 80 < Math.random() * 20;
                 if (!success) {

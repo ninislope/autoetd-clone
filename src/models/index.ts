@@ -1,6 +1,5 @@
 export * from "./ActorBattleStatus";
 export * from "./ActorSexualStatus";
-export * from "./ActorStates";
 export * from "./ActorVariable";
 export * from "./BattleLogic";
 export * from "./Character";
@@ -14,4 +13,5 @@ export * from "./PersonsClass";
 export * from "./RootStore";
 export * from "./SceneId";
 export * from "./Scenes";
+export * from "./StateLogic";
 export * from "./actorVariableMax";
