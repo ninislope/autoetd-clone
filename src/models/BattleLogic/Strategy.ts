@@ -1,32 +1,49 @@
-import { BattleClass } from "./BattleClass";
 import { DungeonActionResultContent } from "./DungeonActionResult";
-import { BattlerClass } from "./BattlerClass";
-import { Battler } from "./Battler";
 import { StrategyConditionId } from "./StrategyConditionId";
 import { StrategyTargettingId } from "./StrategyTargettingId";
 import { StrategyActionId } from "./StrategyActionId";
-import { targetting, action, condition } from "../../masters/strategy";
-import { BattlersClass } from "./BattlersClass";
+import { condition, targetting } from "../../masters/strategy";
+import { AllStrategyTargettingType, StrategyTargettingType } from "./StrategyTargettingType";
+import { StrategyPrepareParameter } from "./StrategyPrepareParameter";
+import { StrategyAimedParameter } from "./StrategyAimedParameter";
+import { ActionElement } from "../ActionElement";
+import { ActorVariable } from "../ActorVariable";
+import {
+    StrategyTargettingTypeWithCount,
+    LimitedStrategyTargettingTypeWithCount,
+} from "./StrategyTargettingTypeWithCount";
+import {
+    StrategyOptionDefinitionSource,
+    StrategyOptionDefinition,
+    StrategyOptionValueDefinition,
+    StrategyOptionValueWithLabel,
+    StrategyOptionValueBase,
+    StrategyOptionTypeFromDefinition,
+} from "./StrategyOptionDefinition";
+import { Exercises } from "../exerciseResponse";
+import { ActorParameter } from "./ActorParameter";
 
-export type StrategyConditionOptions<Id extends StrategyConditionId> = Parameters<(typeof condition)[Id]["calc"]>;
+export type StrategyConditionOptions<Id extends StrategyConditionId> = StrategyOptionTypeFromDefinition<
+    ReturnType<typeof condition[Id]["optionsDefinition"]>["definition"]
+>;
 
 export interface StrategyConditionParameter<Id extends StrategyConditionId> {
     id: Id;
     options?: StrategyConditionOptions<Id>;
 }
 
-export type StrategyTargettingOptions<Id extends StrategyTargettingId> = Parameters<(typeof targetting)[Id]["calc"]>;
+export type StrategyTargettingOptions<Id extends StrategyTargettingId> = StrategyOptionTypeFromDefinition<
+    ReturnType<typeof targetting[Id]["optionsDefinition"]>["definition"]
+>;
 
 export interface StrategyTargettingParameter<Id extends StrategyTargettingId> {
     id: Id;
     options?: StrategyTargettingOptions<Id>;
 }
 
-export type StrategyActionOptions<Id extends StrategyActionId> = Parameters<(typeof action)[Id]["calc"]>;
-
 export interface StrategyActionParameter<Id extends StrategyActionId> {
     id: Id;
-    options?: StrategyActionOptions<Id>;
+    targettingTypeIndex: number;
 }
 
 export interface Strategy<
@@ -39,24 +56,75 @@ export interface Strategy<
     action: StrategyActionParameter<AId>;
 }
 
-export interface StrategyCondition<T extends any[] = []> {
-    calc: (...options: T) => (battle: BattleClass, battler: BattlerClass, turn: number) => boolean;
-    name: (...options: T) => string;
+export interface FixedStrategy {
+    source: Strategy;
+    condition: StrategyCondition;
+    targetting: StrategyTargetting;
+    action: StrategyAction;
 }
 
-export interface StrategyTargetting<T extends any[] = []> {
-    calc: (...options: T) => (battle: BattleClass, battler: BattlerClass, turn: number) => Battler[];
-    name: (...options: T) => string;
+export interface StrategyConditionSource<
+    OptionsDefinitionSource extends StrategyOptionDefinitionSource<OptionsDefinition, Definitions, Values, Value, Name>,
+    OptionsDefinition extends StrategyOptionDefinition<Definitions, Values, Value, Name>,
+    Definitions extends readonly StrategyOptionValueDefinition<Values, any, Name>[],
+    Values extends readonly StrategyOptionValueWithLabel<Value>[],
+    Value extends StrategyOptionValueBase,
+    Name extends string
+> {
+    optionsDefinition: OptionsDefinitionSource;
+    value(
+        options: StrategyOptionTypeFromDefinition<ReturnType<OptionsDefinitionSource>["definition"]>,
+    ): StrategyCondition;
 }
 
-export interface StrategyAction<T extends any[] = []> {
-    calc: (
-        ...options: T
-    ) => (
-        battle: BattleClass,
-        battler: BattlerClass,
-        targets: BattlersClass,
-        turn: number,
-    ) => DungeonActionResultContent[];
-    name: (...options: T) => string;
+export interface StrategyCondition {
+    calc: (param: StrategyPrepareParameter) => boolean;
+    name?: string;
+}
+
+type StrategyTargettingWithCountMap<
+    Targetting extends StrategyTargettingType
+> = Targetting extends AllStrategyTargettingType ? AllStrategyTargettingType : LimitedStrategyTargettingTypeWithCount;
+
+export interface StrategyTargettingSource<
+    Targetting extends StrategyTargettingType,
+    OptionsDefinitionSource extends StrategyOptionDefinitionSource<OptionsDefinition, Definitions, Values, Value, Name>,
+    OptionsDefinition extends StrategyOptionDefinition<Definitions, Values, Value, Name>,
+    Definitions extends readonly StrategyOptionValueDefinition<Values, any, Name>[],
+    Values extends readonly StrategyOptionValueWithLabel<Value>[],
+    Value extends StrategyOptionValueBase,
+    Name extends string
+> {
+    type: Targetting;
+    optionsDefinition: OptionsDefinitionSource;
+    value(
+        targettingType: StrategyTargettingWithCountMap<Targetting>,
+        options: StrategyOptionTypeFromDefinition<ReturnType<OptionsDefinitionSource>["definition"]>,
+    ): StrategyTargetting;
+}
+
+export interface StrategyTargetting {
+    calc: (param: StrategyPrepareParameter) => ActorParameter[];
+    name: string;
+    caution?: string;
+}
+
+export interface StrategyAction {
+    calc: (param: StrategyAimedParameter) => DungeonActionResultContent[];
+    name: string;
+    description: string;
+    targettingTypes: readonly StrategyTargettingTypeWithCount[];
+    /** コスト */
+    cost: Partial<ActorVariable>;
+    /** 属性 */
+    elements: readonly ActionElement[];
+    /** 運動強度 */
+    exercises: Exercises;
+    /** 運動する部位 */
+    // 部位指定面倒なので強度のみでやる。部位毎に強度への反応性を定義する。
+    // exerciseParts: PartId[];
+    /** 予備動作の運動強度 */
+    preExercise: Exercises;
+    /** 予備動作で運動する部位 */
+    // preExerciseParts: PartId[];
 }

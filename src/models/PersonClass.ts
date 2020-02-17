@@ -1,68 +1,32 @@
 import { immerable } from "immer";
-import { CharacterType } from "./CharacterType";
-import { Person } from "./Person";
-import { CharacterClass } from "./CharacterClass";
-import { ActorVariable } from "./ActorVariable";
-import { ActorSexualStatus } from "./ActorSexualStatus";
-import { ActorStates } from "./StateLogic";
+import { PersonBaseClass } from "./PersonBaseClass";
+import { EffectivePersonClass } from "./EffectivePersonClass";
+import { StateTriggerEffectName, StateTriggerEffects } from "./StateLogic";
+import { ElementOf } from "../util";
+import { createCacheStore } from "../util/createCacheStore";
 
-export type CharacterClassMap = { [type in CharacterType]?: CharacterClass<type> } & {
-    normal: CharacterClass<"normal">;
-};
+const effectiveCache = createCacheStore<PersonClass, EffectivePersonClass>();
 
-export class PersonClass implements Person {
+export class PersonClass extends PersonBaseClass {
     [immerable] = true;
 
-    readonly id: number;
-
-    readonly characters: CharacterClassMap;
-
-    readonly currentCharactorType: CharacterType;
-
-    readonly variable: ActorVariable;
-
-    readonly sexualStatus: ActorSexualStatus;
-
-    readonly states: ActorStates;
-
-    constructor(person: Person) {
-        this.id = person.id;
-        this.characters = {} as CharacterClassMap;
-        const types = Object.keys(person.characters) as CharacterType[];
-        for (let i = 0; i < types.length; ++i) {
-            const type = types[i];
-            (this.characters[type] as CharacterClass<typeof type>) =
-                person.characters[type] instanceof CharacterClass
-                    ? (person.characters[type] as CharacterClass<typeof type>)
-                    : new CharacterClass(person.characters[type]!);
-        }
-        this.currentCharactorType = person.currentCharactorType;
-        this.variable = person.variable;
-        this.sexualStatus = person.sexualStatus;
-        this.states = person.states;
+    // eslint-disable-next-line class-methods-use-this
+    get isEffective(): false {
+        return false;
     }
 
-    get name() {
-        return this.currentCharacter.name;
+    get asEffective() {
+        return effectiveCache(
+            this,
+            () => new EffectivePersonClass(this.equipments.applyPassive(this.states.applyPassive(this))),
+        );
     }
 
-    get exp() {
-        return this.currentCharacter.exp;
-    }
-
-    get battleStatus() {
-        return this.currentCharacter.battleStatus;
-    }
-
-    get strategies() {
-        return this.currentCharacter.strategies;
-    }
-
-    get living() {
-        return this.variable.hp > 0;
-    }
-
-    private get currentCharacter() {
-        return this.characters[this.currentCharactorType]!;
+    triggerEffect<Name extends StateTriggerEffectName>(
+        name: Name,
+        params: ElementOf<Parameters<NonNullable<StateTriggerEffects[Name]>>>,
+    ) {
+        // TODO: equipments or some
+        return this.states.triggerEffect(name, params);
     }
 }

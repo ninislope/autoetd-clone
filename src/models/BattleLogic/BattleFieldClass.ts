@@ -1,72 +1,64 @@
 import { immerable } from "immer";
-import { BattlerParameter } from "./BattlerParameter";
-import { BattlerParametersClass } from "./BattlerParametersClass";
-import { BattlersClass } from "./BattlersClass";
+import { ActorParameter } from "./ActorParameter";
+import { ActorParametersClass } from "./ActorParametersClass";
+import { ActorsClass } from "./ActorsClass";
 import { BattleField } from "./BattleField";
-import { PersonClass } from "../PersonClass";
-import { BattlerClass } from "./BattlerClass";
+import { ActorClass } from "./ActorClass";
 import { PersonsClass } from "../PersonsClass";
+import { asClass } from "../../util";
 
+/** バトル環境 */
 export class BattleFieldClass implements BattleField {
     [immerable] = true;
 
-    readonly actors: PersonsClass;
+    readonly friends: PersonsClass;
 
     readonly enemies: PersonsClass;
 
     constructor(field: BattleField) {
-        this.actors =
-            field.actors instanceof PersonsClass
-                ? field.actors
-                : new PersonsClass(
-                      ...field.actors.map(person => (person instanceof PersonClass ? person : new PersonClass(person))),
-                  );
-        this.enemies =
-            field.enemies instanceof PersonsClass
-                ? field.enemies
-                : new PersonsClass(
-                      ...field.enemies.map(person =>
-                          person instanceof PersonClass ? person : new PersonClass(person),
-                      ),
-                  );
+        this.friends = asClass(field.friends, PersonsClass);
+        this.enemies = asClass(field.enemies, PersonsClass);
     }
 
-    battlers() {
-        return new BattlersClass(...this.characterBattlers().concat(this.enemyBattlers()));
+    battlers(type?: "friends" | "enemies") {
+        if (type) return type === "friends" ? this.friendBattlers() : this.enemyBattlers();
+        return new ActorsClass(...this.friendBattlers().concat(this.enemyBattlers()));
     }
 
-    characterBattlers() {
-        return new BattlersClass(
-            ...this.actors.map((person, index) => new BattlerClass({ index, person, type: "actors" })),
+    friendBattlers() {
+        return new ActorsClass(
+            ...this.friends.map((person, index) => new ActorClass({ index, person, type: "friends" })),
         );
     }
 
     enemyBattlers() {
-        return new BattlersClass(
-            ...this.enemies.map((person, index) => new BattlerClass({ index, person, type: "enemies" })),
+        return new ActorsClass(
+            ...this.enemies.map((person, index) => new ActorClass({ index, person, type: "enemies" })),
         );
     }
 
-    mapBattlers(battlers: BattlerParameter[]) {
-        return new BattlersClass(
-            ...battlers.map(owner => new BattlerClass({ ...owner, person: this[owner.type][owner.index] })),
-        );
+    actor(actorParameter: ActorParameter) {
+        return new ActorClass({ ...actorParameter, person: this[actorParameter.type][actorParameter.index] });
     }
 
-    mapCharacters(battlers: BattlerParametersClass) {
-        return this.mapBattlers(battlers.filterCharacters());
+    mapActors(actors: ActorParameter[]) {
+        return new ActorsClass(...actors.map(this.actor.bind(this)));
     }
 
-    mapEnemies(battlers: BattlerParametersClass) {
-        return this.mapBattlers(battlers.filterEnemies());
+    mapFriendActors(actors: ActorParametersClass) {
+        return this.mapActors(actors.filterFriends());
+    }
+
+    mapEnemyActors(actors: ActorParametersClass) {
+        return this.mapActors(actors.filterEnemies());
     }
 
     livingBattlerCount() {
-        return this.livingCharacterBattlerCount() + this.livingEnemyBattlerCount();
+        return this.livingFriendBattlerCount() + this.livingEnemyBattlerCount();
     }
 
-    livingCharacterBattlerCount() {
-        return this.actors.filter(person => person.living).length;
+    livingFriendBattlerCount() {
+        return this.friends.filter(person => person.living).length;
     }
 
     livingEnemyBattlerCount() {
@@ -74,8 +66,8 @@ export class BattleFieldClass implements BattleField {
     }
 
     winner() {
-        if (this.livingCharacterBattlerCount() === 0) return "enemies";
-        if (this.livingEnemyBattlerCount() === 0) return "actors";
+        if (this.livingFriendBattlerCount() === 0) return "enemies";
+        if (this.livingEnemyBattlerCount() === 0) return "friends";
         return undefined;
     }
 }

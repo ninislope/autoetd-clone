@@ -1,14 +1,14 @@
-import { StrategyTargetting } from "../../../models";
+import { strategyTargettingSource } from "../helper";
+import { none } from "./filter";
 
-export const allFriends: StrategyTargetting = {
-    name: () => `全ての味方に`,
-    calc: () => (battle, battler) => {
-        const { type } = battler;
-        const targets = battle.lastField()[type].living();
-        return targets.map((person, index) => ({
-            type,
-            index,
-            person,
-        }));
-    },
-};
+export const allFriends = strategyTargettingSource(
+    { select: "all", for: "friends" },
+    none.definition,
+)(() => ({
+    name: "全ての味方に",
+    calc: ({ battle, battler }) =>
+        battle
+            .lastField()
+            .battlers(battler.type)
+            .living(),
+}));

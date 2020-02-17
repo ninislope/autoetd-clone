@@ -23,7 +23,6 @@
     "rules": {
         "react/prop-types": "off",
         "import/prefer-default-export": "off",
-        "import/no-cycle": "off",
         "no-restricted-syntax": [
             "error",
             {
@@ -39,6 +38,10 @@
                 "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
             }
         ],
-        "no-plusplus": "off"
+        "no-plusplus": "off",
+        "no-param-reassign": "off",
+        "import/no-cycle": "warn",
+        "@typescript-eslint/no-implied-eval": "off",
+        "@typescript-eslint/no-throw-literal": "off"
     }
 }

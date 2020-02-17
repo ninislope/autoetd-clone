@@ -3,6 +3,8 @@ export interface Size {
     readonly brain: number;
     /** 乳房（膨乳） */
     readonly bust: number;
+    /** アンダーバスト */
+    readonly underBust: number;
     /** 乳首（乳首肥大） */
     readonly nipple: number;
     /** おなか（ボテ腹） */
@@ -23,11 +25,14 @@ export interface Size {
     readonly anus: number;
     /** 尻（尻肉肥大） */
     readonly hip: number;
+    /** ふともも（ふともも肥大） */
+    readonly thigh: number;
 }
 
 export const zeroSize: Size = {
     brain: 0,
     bust: 0,
+    underBust: 0,
     nipple: 0,
     stomach: 0,
     clitoris: 0,
@@ -38,4 +43,5 @@ export const zeroSize: Size = {
     ovary: 0,
     anus: 0,
     hip: 0,
+    thigh: 0,
 };

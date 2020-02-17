@@ -1,9 +1,9 @@
-import { BattlerParameter } from "./BattlerParameter";
+import { ActorParameter } from "./ActorParameter";
 import { BattleField } from "./BattleField";
 
 export interface DungeonActionResult extends DungeonActionResultContent {
     readonly turn: number;
-    readonly owner: BattlerParameter;
+    readonly owner: ActorParameter;
 }
 
 export interface DungeonActionResultContent {

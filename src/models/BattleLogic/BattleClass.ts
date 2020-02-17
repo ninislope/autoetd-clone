@@ -1,10 +1,12 @@
 import { immerable } from "immer";
-import { BattlerClass } from "./BattlerClass";
+import { ActorClass } from "./ActorClass";
 import { BattleFieldClass } from "./BattleFieldClass";
 import { DungeonActionResultsClass } from "./DungeonActionResultsClass";
 import { Battle } from "./Battle";
 import { DungeonActionResultClass } from "./DungeonActionResultClass";
+import { asClass } from "../../util";
 
+/** バトル */
 export class BattleClass implements Battle {
     [immerable] = true;
 
@@ -13,14 +15,8 @@ export class BattleClass implements Battle {
     readonly actions: DungeonActionResultsClass;
 
     constructor(battle: Battle) {
-        this.initialField =
-            battle.initialField instanceof BattleFieldClass
-                ? battle.initialField
-                : new BattleFieldClass(battle.initialField);
-        this.actions =
-            battle.actions instanceof DungeonActionResultsClass
-                ? battle.actions
-                : new DungeonActionResultsClass(...battle.actions.map(action => new DungeonActionResultClass(action)));
+        this.initialField = asClass(battle.initialField, BattleFieldClass);
+        this.actions = asClass(battle.actions, DungeonActionResultsClass);
     }
 
     lastField() {
@@ -32,6 +28,11 @@ export class BattleClass implements Battle {
         return this.actions.last();
     }
 
+    lastTurn() {
+        // eslint-disable-next-line no-undef
+        return this.actions.last()?.turn || 0;
+    }
+
     winner() {
         const action = this.lastAction();
         if (!action) return undefined;
@@ -41,7 +42,7 @@ export class BattleClass implements Battle {
     progressAction() {
         const lastAction = this.lastAction();
         // 行動順確定
-        let nextBattler: BattlerClass;
+        let nextBattler: ActorClass;
         let turn: number;
         if (lastAction) {
             const lastTurn = this.actions.turn(lastAction.turn);

@@ -1,5 +1,5 @@
 import produce from "immer";
-import { sexualState } from "../../../models";
+import { sexualState } from "../helper";
 
 export const 発情 = sexualState({
     levelName: true,
@@ -8,7 +8,6 @@ export const 発情 = sexualState({
             effects: {
                 passive: person =>
                     produce(person, next => {
-                        // eslint-disable-next-line no-param-reassign
                         next.battleStatus.con *= 0.8;
                     }),
             },

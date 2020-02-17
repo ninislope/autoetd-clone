@@ -1,5 +1,5 @@
-import { StateBase } from "./StateBase";
-import { StateType } from "./StateType";
+import { StateBase } from "../../../models/StateLogic/StateBase";
+import { StateType } from "../../../models/StateLogic/StateType";
 
 export function normalState<T extends StateBase>(state: T) {
     return { type: StateType.Normal as StateType.Normal, ...state };

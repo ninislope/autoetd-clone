@@ -36,12 +36,17 @@ const root = new FileSystemObject("src");
  * @property {(file: FileSystemObject) => boolean} [includes]
  */
 
+const helperNames = ["helper", "filter"].reduce(
+    (names, name) => ({ ...names, [name]: true }),
+    /** @type {{[name: string]: boolean}} */ ({}),
+);
+
 /**
  *
  * @param {FileSystemObject} file
  */
 function exceptHelper(file) {
-    return file.basename().path !== "helper";
+    return !helperNames[file.basename().path];
 }
 
 /** @type {NeedIndex[]} */
@@ -68,14 +73,18 @@ const needIndexes = [
     { path: "models/StateLogic", type: "exports" },
     { path: "models", type: "exports" },
     { path: "util", type: "exports" },
-    { path: "masters/state", type: "exports" },
-    { path: "masters/state/normal", type: "exports" },
-    { path: "masters/state/sexual", type: "exports" },
-    { path: "masters/state/constitution", type: "exports" },
-    { path: "masters/state/hidden", type: "exports" },
+    { path: "masters/equipments", type: "exports", includes: exceptHelper },
+    { path: "masters/items", type: "exports", includes: exceptHelper },
+    { path: "masters/state", type: "exports", includes: exceptHelper },
+    { path: "masters/state/normal", type: "exports", includes: exceptHelper },
+    { path: "masters/state/sexual", type: "exports", includes: exceptHelper },
+    { path: "masters/state/constitution", type: "exports", includes: exceptHelper },
+    { path: "masters/state/hidden", type: "exports", includes: exceptHelper },
     { path: "masters/strategy/condition", type: "exports", includes: exceptHelper },
     { path: "masters/strategy/targetting", type: "exports", includes: exceptHelper },
+    { path: "masters/strategy/targetting/filter", type: "exports" },
     { path: "masters/strategy/action", type: "exports", includes: exceptHelper },
+    { path: "masters/strategy/optionsDefinition", type: "exports", includes: exceptHelper },
 ];
 
 /** @type {{[ext: string]: boolean}} */

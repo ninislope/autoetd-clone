@@ -1,9 +1,7 @@
-import { StateEffects } from "./StateEffects";
+import { StateId } from "./StateId";
+import { HasEffect } from "./HasEffect";
 
-export interface StateLevel {
-    readonly name?: string;
+export interface StateLevel extends HasEffect<StateId> {
     readonly levelName?: boolean;
-    readonly description?: string;
     readonly hidden?: true;
-    readonly effects?: StateEffects;
 }

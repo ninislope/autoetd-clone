@@ -2,11 +2,15 @@
 import { immerable } from "immer";
 import _ from "lodash";
 import { lastOf } from "../../util";
-import { BattlerParametersClass } from "./BattlerParametersClass";
+import { ActorParametersClass } from "./ActorParametersClass";
 import { DungeonActionResultClass } from "./DungeonActionResultClass";
+import { extendsArray } from "../../util/extendsArray";
 
+@extendsArray()
 export class DungeonActionResultsClass extends Array<DungeonActionResultClass> {
     [immerable] = true;
+
+    static readonly elementType = DungeonActionResultClass;
 
     turn(turn: number) {
         const useTurn = turn >= 0 ? turn : (this.last() || { turn: -1 }).turn + 1 + turn;
@@ -19,8 +23,8 @@ export class DungeonActionResultsClass extends Array<DungeonActionResultClass> {
         return new DungeonActionResultClass(lastOf(this, index)!);
     }
 
-    filterCharacters() {
-        return new DungeonActionResultsClass(...this.filter(result => result.owner.type === "actors"));
+    filterFriends() {
+        return new DungeonActionResultsClass(...this.filter(result => result.owner.type === "friends"));
     }
 
     filterEnemies() {
@@ -28,25 +32,28 @@ export class DungeonActionResultsClass extends Array<DungeonActionResultClass> {
     }
 
     actedBattlers() {
-        return new BattlerParametersClass(
-            ..._.uniqBy(this.map(result => result.owner), battler => `${battler.type}-${battler.index}`),
+        return new ActorParametersClass(
+            ..._.uniqBy(
+                this.map(result => result.owner),
+                battler => `${battler.type}-${battler.index}`,
+            ),
         );
     }
 
-    actedCharacters() {
-        return new BattlerParametersClass(...this.filterCharacters().actedBattlers());
+    actedFriends() {
+        return new ActorParametersClass(...this.filterFriends().actedBattlers());
     }
 
     actedEnemies() {
-        return new BattlerParametersClass(...this.filterEnemies().actedBattlers());
+        return new ActorParametersClass(...this.filterEnemies().actedBattlers());
     }
 
     notActedBattlers() {
-        return new BattlerParametersClass(...this.notActedCharacters().concat(this.notActedEnemies()));
+        return new ActorParametersClass(...this.notActedFriends().concat(this.notActedEnemies()));
     }
 
-    notActedCharacters() {
-        return this.actedCharacters().rejectCharacters(this.last()!.resultField);
+    notActedFriends() {
+        return this.actedFriends().rejectFriends(this.last()!.resultField);
     }
 
     notActedEnemies() {
@@ -54,11 +61,12 @@ export class DungeonActionResultsClass extends Array<DungeonActionResultClass> {
     }
 }
 
+@extendsArray()
 export class DungeonTurnActionResultsClass extends DungeonActionResultsClass {
     nextBattler() {
         const lastAction = this.last();
         if (!lastAction) throw new Error("no action");
-        const battlers = lastAction.resultField.mapBattlers(this.notActedBattlers());
+        const battlers = lastAction.resultField.mapActors(this.notActedBattlers());
         return battlers.living().fastest();
     }
 

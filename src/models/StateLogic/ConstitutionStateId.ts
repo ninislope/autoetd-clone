@@ -1,1 +1,1 @@
-export type ConstitutionStateId = "膨乳";
+export type ConstitutionStateId = "おっぱい" | "膨乳";

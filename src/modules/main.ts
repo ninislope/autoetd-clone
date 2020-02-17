@@ -5,7 +5,7 @@ import { personSample } from "./personSample";
 
 const { createActions, action, reduceAction } = reduxHelper<MainStore>({
     currentScene: "dungeon",
-    persons: [personSample(1, "a"), personSample(2, "b")],
+    persons: [personSample(1, "さゆみ"), personSample(2, "太郎")],
     party: [],
     clearedDungeonIds: [],
     dungeonFloor: 0,
@@ -45,12 +45,19 @@ const { reducer, actionCreators, actionTypes } = createActions("main", {
                 battle = state.battle;
             } else {
                 // TODO: 確率でバトル始まる
+                if (Math.random() < 0.1) {
+                    return {
+                        ...state,
+                        dungeonLogIndex,
+                        dungeonLogs: [...state.dungeonLogs, `${state.party.length}人は周囲を探索したがなにもなかった`],
+                    };
+                }
                 // TODO: バトル開始文言等
                 beginLogs.push("バトル開始!");
                 battle = new BattleClass({
                     initialField: {
-                        actors: state.persons,
-                        enemies: [personSample(100, "e1")], // TODO
+                        friends: state.persons,
+                        enemies: [personSample(100, "ゴブリン")], // TODO
                     },
                     actions: [],
                 });
@@ -59,11 +66,11 @@ const { reducer, actionCreators, actionTypes } = createActions("main", {
                 battle = battle.progressAction();
                 const lastAction = battle.lastAction();
                 const dungeonLogs = [...state.dungeonLogs, ...beginLogs, ...(lastAction ? lastAction.messages : [])];
-                const persons = battle.lastField().actors.mergeList(state.persons);
+                const persons = battle.lastField().friends.mergeList(state.persons);
                 const winner = battle.winner();
                 // TODO: 戦闘終了文言
                 if (winner) {
-                    dungeonLogs.push(`${winner === "actors" ? "勝利した!" : "敗北してしまった!"}`);
+                    dungeonLogs.push(`${winner === "friends" ? "勝利した!" : "敗北してしまった!"}`);
                     battle = undefined;
                 }
                 return { ...state, persons, dungeonLogIndex, dungeonLogs, battle };

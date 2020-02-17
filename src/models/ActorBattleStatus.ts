@@ -1,3 +1,6 @@
+import { array, allKeys } from "../util";
+import { tHelper } from "../tHelper";
+
 export interface ActorBattleStatus {
     /** Max HP */
     readonly maxHp: number;
@@ -19,6 +22,12 @@ export interface ActorBattleStatus {
     readonly con: number; // 基礎値はつねに100で計算で上下する感じ ずっと低いままでいたせいで基礎値が50とかになるとそれはそれでかもしれない
 }
 
+export type ActorBattleStatusKey = keyof ActorBattleStatus;
+
+export const actorBattleStatusKeys = array(
+    allKeys<ActorBattleStatusKey>()(["maxHp", "maxMp", "atk", "def", "mAtk", "mDef", "hit", "agi", "con"]),
+);
+
 export const zeroActorBattleStatus: ActorBattleStatus = {
     maxHp: 0,
     maxMp: 0,
@@ -30,3 +39,17 @@ export const zeroActorBattleStatus: ActorBattleStatus = {
     hit: 0,
     con: 100,
 };
+
+export const actorBattleStatusKeyT = tHelper<ActorBattleStatusKey>({
+    ja: {
+        maxHp: "最大HP",
+        maxMp: "最大MP",
+        atk: "攻撃力",
+        def: "防御力",
+        mAtk: "知力",
+        mDef: "経験",
+        hit: "精度",
+        agi: "俊敏",
+        con: "集中力",
+    },
+});

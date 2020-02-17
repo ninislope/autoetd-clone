@@ -1,3 +1,6 @@
+import { array, allKeys } from "../util";
+import { tHelper } from "../tHelper";
+
 export interface ActorVariable {
     /** Hit Point */
     readonly hp: number;
@@ -13,6 +16,8 @@ export interface ActorVariable {
 
 export type ActorVariableKey = keyof ActorVariable;
 
+export const actorVariableKeys = array(allKeys<ActorVariableKey>()(["hp", "mp", "ap", "ep", "rp"]));
+
 export const zeroActorVariable: ActorVariable = {
     hp: 0,
     mp: 0,
@@ -20,3 +25,13 @@ export const zeroActorVariable: ActorVariable = {
     ep: 0,
     rp: 0,
 };
+
+export const actorVariableKeyT = tHelper<ActorVariableKey>({
+    ja: {
+        hp: "HP",
+        mp: "MP",
+        ap: "絶頂P",
+        ep: "発情P",
+        rp: "抵抗値",
+    },
+});

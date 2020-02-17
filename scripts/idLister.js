@@ -14,12 +14,16 @@ const camelcase = require("camelcase");
  * @property {(name: FileSystemObject) => boolean} [includes]
  */
 
+const helperNames = ["helper", "filter"].reduce(
+    (names, name) => ({ ...names, [name]: true }),
+    /** @type {{[name: string]: boolean}} */ ({}),
+);
 /**
  *
  * @param {FileSystemObject} file
  */
 function exceptHelper(file) {
-    return file.basename().path !== "helper";
+    return !helperNames[file.basename().path];
 }
 
 /** @type {NeedId[]} */
@@ -43,6 +47,14 @@ const needIds = [
         path: "src/masters/strategy/targetting",
         idsFile: "src/models/BattleLogic/StrategyTargettingId.ts",
         includes: exceptHelper,
+    },
+    {
+        path: "src/masters/equipments",
+        idsFile: "src/models/StateLogic/EquipmentId.ts",
+    },
+    {
+        path: "src/masters/items",
+        idsFile: "src/models/StateLogic/ItemId.ts",
     },
     {
         path: "src/masters/state/normal",

@@ -1,15 +1,16 @@
 import { immerable } from "immer";
-import { BattlerParameter } from "./BattlerParameter";
+import { ActorParameter } from "./ActorParameter";
 import { BattleFieldClass } from "./BattleFieldClass";
 import { DungeonActionResult } from "./DungeonActionResult";
-import { BattlerParameterClass } from "./BattlerParameterClass";
+import { ActorParameterClass } from "./ActorParameterClass";
+import { asClass } from "../../util";
 
 export class DungeonActionResultClass implements DungeonActionResult {
     [immerable] = true;
 
     readonly turn: number;
 
-    readonly owner: BattlerParameterClass;
+    readonly owner: ActorParameterClass;
 
     readonly messages: string[];
 
@@ -17,19 +18,15 @@ export class DungeonActionResultClass implements DungeonActionResult {
 
     constructor(result: DungeonActionResult) {
         this.turn = result.turn;
-        this.owner =
-            result.owner instanceof BattlerParameterClass ? result.owner : new BattlerParameterClass(result.owner);
+        this.owner = asClass(result.owner, ActorParameterClass);
         this.messages = result.messages;
-        this.resultField =
-            result.resultField instanceof BattleFieldClass
-                ? result.resultField
-                : new BattleFieldClass(result.resultField);
+        this.resultField = asClass(result.resultField, BattleFieldClass);
     }
 
-    nextBattler(filterBattlers: BattlerParameter[] = []) {
+    nextBattler(filterBattlers: ActorParameter[] = []) {
         if (filterBattlers.length) {
             return this.resultField
-                .mapBattlers(filterBattlers)
+                .mapActors(filterBattlers)
                 .living()
                 .fastest();
         }

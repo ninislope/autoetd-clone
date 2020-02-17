@@ -1,1 +1,1 @@
-export type StrategyActionId = "attack";
+export type StrategyActionId = "attack" | "defendBust";

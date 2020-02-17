@@ -3,6 +3,7 @@ import { ActorBattleStatus } from "./ActorBattleStatus";
 import { CharacterType } from "./CharacterType";
 import { StrategiesClass } from "./BattleLogic/StrategiesClass";
 import { Character } from "./Character";
+import { asClass } from "../util";
 
 export class CharacterClass<CT = CharacterType> implements Character<CT> {
     [immerable] = true;
@@ -22,9 +23,6 @@ export class CharacterClass<CT = CharacterType> implements Character<CT> {
         this.name = character.name;
         this.exp = character.exp;
         this.battleStatus = character.battleStatus;
-        this.strategies =
-            character.strategies instanceof StrategiesClass
-                ? character.strategies
-                : new StrategiesClass(...character.strategies);
+        this.strategies = asClass(character.strategies, StrategiesClass);
     }
 }

@@ -1,16 +1,19 @@
-import { StrategyTargetting } from "../../../models";
+import { strategyTargettingSource } from "../helper";
 import { chooseRandomIndexes } from "../../../util";
+import { none } from "./filter";
 
-export const randomSomeEnemies: StrategyTargetting<[number]> = {
-    name: (count = 1) => `ランダムな敵${count}体に`,
-    calc: (count = 1) => (battle, battler) => {
+export const randomSomeEnemies = strategyTargettingSource(
+    { select: "random", for: "enemies" },
+    none.definition,
+)(({ maxCount }) => ({
+    name: `ランダムな敵${maxCount}体に`,
+    calc: ({ battle, battler }) => {
         const type = battler.opponentType();
-        const targets = battle.lastField()[type].living();
-        const indexes = chooseRandomIndexes(targets.length, count);
-        return indexes.map(index => ({
-            type,
-            index,
-            person: targets[index],
-        }));
+        const targets = battle
+            .lastField()
+            .battlers(type)
+            .living();
+        const indexes = chooseRandomIndexes(targets.length, maxCount);
+        return indexes.map(index => targets[index]);
     },
-};
+}));

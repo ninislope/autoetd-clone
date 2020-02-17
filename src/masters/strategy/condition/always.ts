@@ -1,6 +1,6 @@
-import { StrategyCondition } from "../../../models";
+import { strategyConditionSource } from "../helper";
+import { empty } from "../optionsDefinition";
 
-export const always: StrategyCondition = {
-    name: () => "常時",
-    calc: () => () => true,
-};
+export const always = strategyConditionSource(empty)(() => ({
+    calc: () => true,
+}));

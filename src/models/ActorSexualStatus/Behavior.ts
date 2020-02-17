@@ -1,3 +1,5 @@
+import { array, allKeys } from "../../util";
+
 export interface Behavior {
     readonly おもらし: number;
     readonly おもらし性感: number;
@@ -19,6 +21,32 @@ export interface Behavior {
     readonly 発作: number;
     readonly 性感共有: number;
 }
+
+export type BehaviorKey = keyof Behavior;
+
+export const behaviorKeys = array(
+    allKeys<BehaviorKey>()([
+        "おもらし",
+        "おもらし性感",
+        "射乳",
+        "射乳性感",
+        "食性感",
+        "排泄性感",
+        "オナニー",
+        "精液",
+        "媚薬媚毒",
+        "発情",
+        "痴態",
+        "被虐",
+        "淫封",
+        "淫罰",
+        "露出性感",
+        "性具",
+        "射精",
+        "発作",
+        "性感共有",
+    ]),
+);
 
 export const zeroBehavior: Behavior = {
     おもらし: 0,

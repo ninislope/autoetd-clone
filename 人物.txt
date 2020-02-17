@@ -1,0 +1,33 @@
+人物
+person
+インデクス付き人物
+actor
+パーティー内インデクス付き人物
+battler
+味方側人物
+friends
+敵側人物
+enemies
+味方側パーティー内インデクス付き人物
+friendBattlers
+味方側インデクス付き人物
+friendActors
+敵側インデクス付き人物
+enemyBattlers = enemyActors
+
+人物
+person
+インデクス付き人物
+actor
+パーティー内インデクス付き人物
+battler
+味方側人物
+friends
+敵側人物
+enemies
+味方側パーティー内インデクス付き人物
+friendBattlers
+味方側インデクス付き人物
+friendBattlers
+敵側インデクス付き人物
+enemyBattlers = enemyActors

@@ -1,5 +1,5 @@
 import produce from "immer";
-import { constitutionState } from "../../../models";
+import { constitutionState } from "../helper";
 
 export const 膨乳 = constitutionState({
     levelName: true,

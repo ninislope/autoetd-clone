@@ -2,7 +2,9 @@ import { Character } from "./Character";
 import { CharacterType } from "./CharacterType";
 import { ActorVariable } from "./ActorVariable";
 import { ActorSexualStatus } from "./ActorSexualStatus";
-import { ActorStates } from "./StateLogic";
+import { ActorStateLevels } from "./StateLogic";
+import { ActorEquipments } from "./StateLogic/ActorEquipments";
+import { ActorEquipmentLimits } from "./StateLogic/ActorEquipmentLimits";
 
 export interface Person {
     readonly id: number;
@@ -12,5 +14,7 @@ export interface Person {
     readonly currentCharactorType: CharacterType;
     readonly variable: ActorVariable;
     readonly sexualStatus: ActorSexualStatus;
-    readonly states: ActorStates;
+    readonly stateLevels: ActorStateLevels;
+    readonly equipments: ActorEquipments;
+    readonly equipmentLimits: ActorEquipmentLimits;
 }
