@@ -51,10 +51,12 @@ const needIds = [
     {
         path: "src/masters/equipments",
         idsFile: "src/models/StateLogic/EquipmentId.ts",
+        includes: exceptHelper,
     },
     {
         path: "src/masters/items",
         idsFile: "src/models/StateLogic/ItemId.ts",
+        includes: exceptHelper,
     },
     {
         path: "src/masters/state/normal",
