@@ -70,7 +70,4 @@ const DungeonScene: React.FC<MappedState & MappedDispatch> = ({
     );
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(DungeonScene);
+export default connect(mapStateToProps, mapDispatchToProps)(DungeonScene);

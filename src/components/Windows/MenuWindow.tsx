@@ -22,7 +22,4 @@ const MenuWindow: React.FC<MappedDispatch> = ({ changeScene }) => {
     );
 };
 
-export default connect(
-    null,
-    mapDispatchToProps,
-)(MenuWindow);
+export default connect(null, mapDispatchToProps)(MenuWindow);

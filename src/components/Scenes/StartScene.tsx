@@ -17,7 +17,4 @@ const StartScene: React.FC<MappedDispatch> = ({ changeScene }) => (
     </div>
 );
 
-export default connect(
-    null,
-    mapDispatchToProps,
-)(StartScene);
+export default connect(null, mapDispatchToProps)(StartScene);
