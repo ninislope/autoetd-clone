@@ -1,11 +1,12 @@
-import { immerable } from "immer";
+import produce, { immerable } from "immer";
 import { CharacterType } from "./CharacterType";
 import { Person } from "./Person";
 import { CharacterClass } from "./CharacterClass";
 import { ActorVariable } from "./ActorVariable";
 import { ActorSexualStatus } from "./ActorSexualStatus";
-import { ActorStatesClass } from "./StateLogic";
+import { ActorStatesClass, ActorStateLevels } from "./StateLogic";
 import { ActorEquipmentsClass } from "./StateLogic/ActorEquipmentsClass";
+import { ActorBattleStatus } from "./ActorBattleStatus";
 
 export type CharacterClassMap = { [type in CharacterType]?: CharacterClass<type> } & {
     normal: CharacterClass<"normal">;
@@ -52,8 +53,20 @@ export abstract class PersonBaseClass implements Person {
         return this.currentCharacter.battleStatus;
     }
 
+    setBattleStatus(value: ActorBattleStatus) {
+        return produce(this, next => {
+            next.characters[next.currentCharactorType]!.battleStatus = value;
+        });
+    }
+
     get stateLevels() {
         return this.states.stateLevels;
+    }
+
+    setStateLevels(stateLevels: ActorStateLevels) {
+        return produce(this, next => {
+            next.states.stateLevels = stateLevels;
+        });
     }
 
     get equipmentLimits() {
@@ -76,7 +89,7 @@ export abstract class PersonBaseClass implements Person {
         return this.variable.hp > 0;
     }
 
-    protected get currentCharacter() {
+    get currentCharacter() {
         return this.characters[this.currentCharactorType]!;
     }
 }

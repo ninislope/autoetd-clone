@@ -55,6 +55,8 @@ const DungeonScene: React.FC<MappedState & MappedDispatch> = ({
                         <div key={person.id}>
                             [{person.name}]<br />
                             HP: {person.variable.hp}
+                            <br />
+                            EP: {person.variable.ep}
                         </div>
                     ))}
             </Box>

@@ -1,9 +1,10 @@
-import { BattleClass, ActorParameter, StrategyActionId } from "../BattleLogic";
+import { BattleClass, ActorParameter, StrategyActionId, StrategyAction } from "../BattleLogic";
 import { StateEffectParameter } from "./StateEffectParameter";
 
 export interface StateBattleEffectParameter extends StateEffectParameter {
     readonly battle: BattleClass;
-    readonly battler: ActorParameter;
-    readonly targets: ActorParameter[];
+    readonly battlerParameter: ActorParameter;
+    readonly targetParameters: ActorParameter[];
     readonly actionId: StrategyActionId;
+    readonly action: StrategyAction;
 }

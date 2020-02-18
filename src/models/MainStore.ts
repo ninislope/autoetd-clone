@@ -20,4 +20,5 @@ export interface MainStore {
     readonly dungeonLogIndex: number;
     readonly dungeonLogs: string[];
     readonly battle?: BattleClass;
+    readonly battleActionIndex?: number;
 }

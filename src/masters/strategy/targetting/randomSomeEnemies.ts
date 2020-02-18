@@ -1,4 +1,4 @@
-import { strategyTargettingSource } from "../helper";
+import { strategyTargettingSource } from "./helper";
 import { chooseRandomIndexes } from "../../../util";
 import { none } from "./filter";
 

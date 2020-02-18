@@ -91,8 +91,14 @@ export class ActorEquipmentsClass implements ActorEquipments {
     /** 腕 */
     readonly arm!: readonly OwnedId[];
 
+    /** 腋 */
+    readonly armpit!: readonly OwnedId[];
+
     /** おなか */
     readonly stomach!: readonly OwnedId[];
+
+    /** 背中 */
+    readonly back!: readonly OwnedId[];
 
     /** 陰核 */
     readonly clitoris!: readonly OwnedId[];

@@ -3,6 +3,7 @@ export * from "./chooseRandomIndexes";
 export * from "./createCacheStore";
 export * from "./extendsArray";
 export * from "./genStatePicker";
+export * from "./genSwitcher";
 export * from "./indexBy";
 export * from "./lastOf";
 export * from "./opBool";

@@ -3,6 +3,6 @@ import { ActorParameter } from "./ActorParameter";
 
 export interface StrategyPrepareBaseParameter {
     battle: BattleClass;
-    battler: ActorParameter;
+    battlerParameter: ActorParameter;
     turn: number;
 }

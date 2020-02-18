@@ -5,7 +5,6 @@ import { StrategyActionId } from "./StrategyActionId";
 import { condition, targetting } from "../../masters/strategy";
 import { AllStrategyTargettingType, StrategyTargettingType } from "./StrategyTargettingType";
 import { StrategyPrepareParameter } from "./StrategyPrepareParameter";
-import { StrategyAimedParameter } from "./StrategyAimedParameter";
 import { ActionElement } from "../ActionElement";
 import { ActorVariable } from "../ActorVariable";
 import {
@@ -20,8 +19,9 @@ import {
     StrategyOptionValueBase,
     StrategyOptionTypeFromDefinition,
 } from "./StrategyOptionDefinition";
-import { Exercises } from "../exerciseResponse";
+import { Exercises } from "../Exercises";
 import { ActorParameter } from "./ActorParameter";
+import { StrategyAimedParameter } from "./StrategyAimedParameter";
 
 export type StrategyConditionOptions<Id extends StrategyConditionId> = StrategyOptionTypeFromDefinition<
     ReturnType<typeof condition[Id]["optionsDefinition"]>["definition"]

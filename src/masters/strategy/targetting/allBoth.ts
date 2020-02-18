@@ -1,4 +1,4 @@
-import { strategyTargettingSource } from "../helper";
+import { strategyTargettingSource } from "./helper";
 import { none } from "./filter";
 
 export const allBoth = strategyTargettingSource(

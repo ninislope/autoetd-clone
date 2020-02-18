@@ -30,11 +30,16 @@ export class StrategiesClass extends Array<Strategy> {
     action(battle: BattleClass, battler: ActorClass, turn: number): DungeonActionResultContent[] {
         for (let i = 0; i < this.length; ++i) {
             const fixedStrategy = this.fixedStrategies[i];
-            if (fixedStrategy.condition.calc({ battle, battler, turn })) {
+            if (fixedStrategy.condition.calc({ battle, battler, battlerParameter: battler, turn })) {
+                const targets = battle
+                    .lastField()
+                    .mapActors(fixedStrategy.targetting.calc({ battle, battler, battlerParameter: battler, turn }));
                 return fixedStrategy.action.calc({
                     battle,
                     battler,
-                    targets: battle.lastField().mapActors(fixedStrategy.targetting.calc({ battle, battler, turn })),
+                    battlerParameter: battler,
+                    targets,
+                    targetParameters: targets,
                     turn,
                     actionId: fixedStrategy.source.action.id,
                 });

@@ -1,7 +1,7 @@
 import { strategyOptionDefinitionT } from "../../../models/BattleLogic/strategyOptionDefinitionT";
 import { chooseRandomIndexes } from "../../../util";
 import { battleStatus } from "./filter";
-import { strategyTargettingSource } from "../helper";
+import { strategyTargettingSource } from "./helper";
 
 export const selectableEnemies = strategyTargettingSource(
     { select: "selectable", for: "enemies" },

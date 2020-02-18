@@ -1,4 +1,4 @@
-import { immerable } from "immer";
+import produce, { immerable } from "immer";
 import { ActorParameter } from "./ActorParameter";
 import { ActorParametersClass } from "./ActorParametersClass";
 import { ActorsClass } from "./ActorsClass";
@@ -6,6 +6,7 @@ import { BattleField } from "./BattleField";
 import { ActorClass } from "./ActorClass";
 import { PersonsClass } from "../PersonsClass";
 import { asClass } from "../../util";
+import { PersonClass } from "../PersonClass";
 
 /** バトル環境 */
 export class BattleFieldClass implements BattleField {
@@ -39,6 +40,12 @@ export class BattleFieldClass implements BattleField {
 
     actor(actorParameter: ActorParameter) {
         return new ActorClass({ ...actorParameter, person: this[actorParameter.type][actorParameter.index] });
+    }
+
+    setActorPerson(actorParameter: ActorParameter, person: PersonClass) {
+        return produce(this, next => {
+            next[actorParameter.type][actorParameter.index] = person as any;
+        });
     }
 
     mapActors(actors: ActorParameter[]) {

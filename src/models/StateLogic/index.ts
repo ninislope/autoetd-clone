@@ -1,4 +1,3 @@
-export * from "./ActionEffectResult";
 export * from "./ActorEquipmentLimits";
 export * from "./ActorEquipments";
 export * from "./ActorEquipmentsClass";

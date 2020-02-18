@@ -75,6 +75,8 @@ const needIndexes = [
     { path: "util", type: "exports" },
     { path: "masters/equipments", type: "exports", includes: exceptHelper },
     { path: "masters/items", type: "exports", includes: exceptHelper },
+    { path: "masters/person/friends", type: "exports", includes: exceptHelper },
+    { path: "masters/person/enemies", type: "exports", includes: exceptHelper },
     { path: "masters/state", type: "exports", includes: exceptHelper },
     { path: "masters/state/normal", type: "exports", includes: exceptHelper },
     { path: "masters/state/sexual", type: "exports", includes: exceptHelper },

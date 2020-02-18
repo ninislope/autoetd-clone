@@ -7,8 +7,7 @@ import { PersonClass } from "../PersonClass";
 import { present } from "../../util/present";
 import { StateLevelClass } from "./StateLevelClass";
 import { StateTriggerEffectName, StateTriggerEffects } from "./StateEffects";
-import { ActionEffectResult } from "./ActionEffectResult";
-import { BattleFieldClass, BattleField } from "../BattleLogic";
+import { BattleFieldClass, DungeonActionResultContentClass } from "../BattleLogic";
 import { asClass, ElementOf } from "../../util";
 
 export class ActorStatesClass {
@@ -86,22 +85,28 @@ export class ActorStatesClass {
     triggerEffect<Name extends StateTriggerEffectName>(
         name: Name,
         params: ElementOf<Parameters<NonNullable<StateTriggerEffects[Name]>>>,
-    ): ActionEffectResult {
-        return this.sortedStateLevels
-            .map(state => state.effect(name))
-            .filter(present)
-            .reduce(
-                (result, effect) => {
-                    const next = effect!({
-                        ...params,
-                        field: asClass(result.resultField, BattleFieldClass),
-                    } as any);
-                    return { resultField: next.resultField, messages: result.messages.concat(next.messages) };
-                },
-                {
-                    resultField: params.field as BattleField,
-                    messages: [] as string[],
-                },
-            );
+    ) {
+        return asClass(
+            this.sortedStateLevels
+                .map(state => state.effect(name))
+                .filter(present)
+                .reduce(
+                    (result, effect) => {
+                        const next = effect!({
+                            ...params,
+                            field: result.resultField,
+                        } as any);
+                        return {
+                            resultField: asClass(next.resultField, BattleFieldClass),
+                            messages: result.messages.concat(next.messages),
+                        };
+                    },
+                    {
+                        resultField: params.field,
+                        messages: [] as string[],
+                    },
+                ),
+            DungeonActionResultContentClass,
+        );
     }
 }

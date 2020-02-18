@@ -1,6 +1,7 @@
 import { PartId } from "../PartId";
 import { array, allKeys } from "../../util";
-import { sensitivityKeys, sensitivityKeyT } from "../ActorSexualStatus/Sensitivity";
+import { partIds } from "../partIds";
+import { partIdT } from "../partIdT";
 import { tHelper } from "../../tHelper";
 import { OwnedId } from "./Owned";
 
@@ -73,7 +74,7 @@ export type ActorPartEquipments = {
 
 type ActorPartEquipmentKey = keyof ActorPartEquipments;
 
-const actorPartEquipmentsKeys = sensitivityKeys;
+const actorPartEquipmentsKeys = partIds;
 
 export const equipmentParts: EquipmentPart[] = array(
     allKeys<EquipmentPart>()([...actorBasicEquipmentsKeys, ...actorPartEquipmentsKeys]),
@@ -81,7 +82,7 @@ export const equipmentParts: EquipmentPart[] = array(
 
 export const equipmentPartT = (equipmentPart: EquipmentPart) =>
     actorBasicEquipmentsKeyT(equipmentPart as ActorBasicEquipmentsKey) ||
-    sensitivityKeyT(equipmentPart as ActorPartEquipmentKey);
+    partIdT(equipmentPart as ActorPartEquipmentKey);
 
 export const zeroActorEquipments = equipmentParts.reduce(
     (aes, part) => ({ ...aes, [part]: [] }),

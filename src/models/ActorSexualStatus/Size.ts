@@ -1,7 +1,9 @@
+import { PartId } from "../PartId";
+
 export interface Size {
     /** 脳（脳縮小） */
     readonly brain: number;
-    /** 乳房（膨乳） */
+    /** 乳房（膨乳） トップとアンダーの差 */
     readonly bust: number;
     /** アンダーバスト */
     readonly underBust: number;
@@ -45,3 +47,10 @@ export const zeroSize: Size = {
     hip: 0,
     thigh: 0,
 };
+
+export type SizePartId = keyof Size;
+export type SizePartPartialId = Exclude<keyof Size, "underBust">;
+
+export function isSizePart(part: PartId): part is SizePartPartialId {
+    return (zeroSize as any)[part] !== undefined;
+}

@@ -10,3 +10,7 @@ export function allKeys<V>(): <Arr extends V[]>(
 export function array<T>(arr: T[]): T[] {
     return arr;
 }
+
+export declare type ReadWrite<T> = {
+    -readonly [K in keyof T]: T[K];
+};

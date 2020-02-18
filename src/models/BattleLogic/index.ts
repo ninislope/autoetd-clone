@@ -11,6 +11,7 @@ export * from "./BattleFieldClass";
 export * from "./Displayable";
 export * from "./DungeonActionResult";
 export * from "./DungeonActionResultClass";
+export * from "./DungeonActionResultContentClass";
 export * from "./DungeonActionResultsClass";
 export * from "./StrategiesClass";
 export * from "./Strategy";

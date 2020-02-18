@@ -40,7 +40,8 @@
         ],
         "no-plusplus": "off",
         "no-param-reassign": "off",
-        "import/no-cycle": "warn",
+        "no-continue": "off",
+        "import/no-cycle": "off",
         "@typescript-eslint/no-implied-eval": "off",
         "@typescript-eslint/no-throw-literal": "off"
     }

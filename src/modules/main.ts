@@ -1,11 +1,12 @@
 import { reduxHelper } from "./reduxHelper";
 // eslint-disable-next-line import/named
 import { MainStore, SceneId, BattleClass } from "../models";
-import { personSample } from "./personSample";
+import * as friends from "../masters/person/friends";
+import * as enemies from "../masters/person/enemies";
 
 const { createActions, action, reduceAction } = reduxHelper<MainStore>({
     currentScene: "dungeon",
-    persons: [personSample(1, "さゆみ"), personSample(2, "太郎")],
+    persons: [friends.アリス, friends.栞],
     party: [],
     clearedDungeonIds: [],
     dungeonFloor: 0,
@@ -40,12 +41,13 @@ const { reducer, actionCreators, actionTypes } = createActions("main", {
         // ログの最後を超過したら次のアクションを決定する
         if (state.dungeonLogs.length < dungeonLogIndex + 1) {
             let battle: BattleClass | undefined;
+            let { battleActionIndex } = state;
             const beginLogs = [];
             if (state.battle) {
                 battle = state.battle;
             } else {
                 // TODO: 確率でバトル始まる
-                if (Math.random() < 0.1) {
+                if (Math.random() < 0.5) {
                     return {
                         ...state,
                         dungeonLogIndex,
@@ -57,23 +59,29 @@ const { reducer, actionCreators, actionTypes } = createActions("main", {
                 battle = new BattleClass({
                     initialField: {
                         friends: state.persons,
-                        enemies: [personSample(100, "ゴブリン")], // TODO
+                        enemies: [enemies.スライム], // TODO
                     },
                     actions: [],
                 });
             }
             if (battle) {
                 battle = battle.progressAction();
-                const lastAction = battle.lastAction();
-                const dungeonLogs = [...state.dungeonLogs, ...beginLogs, ...(lastAction ? lastAction.messages : [])];
+                const latestActions = battle.actions.slice(battleActionIndex);
+                battleActionIndex = battle.actions.length;
+                const dungeonLogs = [
+                    ...state.dungeonLogs,
+                    ...beginLogs,
+                    ...latestActions.reduce((messages, a) => messages.concat(a.messages), [] as string[]),
+                ];
                 const persons = battle.lastField().friends.mergeList(state.persons);
                 const winner = battle.winner();
                 // TODO: 戦闘終了文言
                 if (winner) {
                     dungeonLogs.push(`${winner === "friends" ? "勝利した!" : "敗北してしまった!"}`);
                     battle = undefined;
+                    battleActionIndex = undefined;
                 }
-                return { ...state, persons, dungeonLogIndex, dungeonLogs, battle };
+                return { ...state, persons, dungeonLogIndex, dungeonLogs, battle, battleActionIndex };
             }
         }
         return { ...state, dungeonLogIndex };

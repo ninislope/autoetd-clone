@@ -1,6 +1,3 @@
-import { array, allKeys } from "../../util";
-import { tHelper } from "../../tHelper";
-
 export interface Sensitivity {
     /** 肌 */
     readonly skin: number;
@@ -22,8 +19,12 @@ export interface Sensitivity {
     readonly hand: number;
     /** 腕 */
     readonly arm: number;
+    /** 腋（わき） */
+    readonly armpit: number;
     /** おなか */
     readonly stomach: number;
+    /** 背中 */
+    readonly back: number;
     /** 陰核 */
     readonly clitoris: number;
     /** 尿道 */
@@ -54,38 +55,6 @@ export interface Sensitivity {
     readonly foot: number;
 }
 
-export type SensitivityKey = keyof Sensitivity;
-
-export const sensitivityKeys = array(
-    allKeys<SensitivityKey>()([
-        "skin",
-        "brain",
-        "ear",
-        "mouth",
-        "tongue",
-        "throat",
-        "bust",
-        "nipple",
-        "hand",
-        "arm",
-        "stomach",
-        "clitoris",
-        "urethra",
-        "bladder",
-        "labia",
-        "vagina",
-        "portio",
-        "womb",
-        "ovary",
-        "anus",
-        "intestine",
-        "hip",
-        "thigh",
-        "leg",
-        "foot",
-    ]),
-);
-
 export const zeroSensitivity: Sensitivity = {
     skin: 0,
     brain: 0,
@@ -97,7 +66,9 @@ export const zeroSensitivity: Sensitivity = {
     nipple: 0,
     hand: 0,
     arm: 0,
+    armpit: 0,
     stomach: 0,
+    back: 0,
     clitoris: 0,
     urethra: 0,
     bladder: 0,
@@ -113,33 +84,3 @@ export const zeroSensitivity: Sensitivity = {
     leg: 0,
     foot: 0,
 };
-
-export const sensitivityKeyT = tHelper<SensitivityKey>({
-    ja: {
-        skin: "肌",
-        brain: "脳",
-        ear: "耳",
-        mouth: "口",
-        tongue: "舌",
-        throat: "喉",
-        bust: "乳房",
-        nipple: "乳首",
-        hand: "手",
-        arm: "腕",
-        stomach: "おなか",
-        clitoris: "陰核",
-        urethra: "尿道",
-        bladder: "膀胱",
-        labia: "陰唇",
-        vagina: "膣",
-        portio: "子宮口",
-        womb: "子宮",
-        ovary: "卵巣",
-        anus: "肛門",
-        intestine: "腸",
-        hip: "尻",
-        thigh: "ふともも",
-        leg: "脚",
-        foot: "足",
-    },
-});
