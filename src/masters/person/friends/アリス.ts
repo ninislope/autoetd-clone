@@ -15,5 +15,5 @@ export const アリス = produce(createPerson(1, "アリス"), person => {
     person.sexualStatus.size.bust = 20;
     person.sexualStatus.size.underBust = 60;
     person.stateLevels.base = 1;
-    person.stateLevels.膨乳 = 6;
+    person.stateLevels.膨乳 = 1;
 });

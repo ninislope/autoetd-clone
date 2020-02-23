@@ -15,5 +15,5 @@ export const 栞 = produce(createPerson(2, "栞"), person => {
     person.sexualStatus.size.bust = 25;
     person.sexualStatus.size.underBust = 60;
     person.stateLevels.base = 1;
-    person.stateLevels.膨乳 = 2;
+    person.stateLevels.膨乳 = 0;
 });

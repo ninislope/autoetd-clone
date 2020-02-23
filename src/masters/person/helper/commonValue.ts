@@ -9,7 +9,7 @@ export const commonBattleStatus: ActorBattleStatus = {
     def: 10,
     mAtk: 10,
     mDef: 10,
-    agi: 10,
+    agi: 150,
     hit: 10,
     con: 100,
 };
