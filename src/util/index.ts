@@ -10,6 +10,7 @@ export * from "./opBool";
 export * from "./opSort";
 export * from "./pick";
 export * from "./present";
+export * from "./range";
 export * from "./toExistsHash";
 export * from "./types";
 export * from "./zeroCut";

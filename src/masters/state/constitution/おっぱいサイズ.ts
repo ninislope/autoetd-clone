@@ -1,4 +1,5 @@
 import { constitutionState } from "../helper";
+import { rangeArray } from "../../../util";
 
 const achar = "A".charCodeAt(0);
 
@@ -31,17 +32,17 @@ const descriptions = [
     ["Z", "こんなおっぱいではもはや生活さえ難しいのでは？"],
 ] as const;
 
-const cups = [
+const cups: (readonly [number, string, string])[] = [
     [0, "AAAAAカップ", "大平原の小さな胸。"] as const,
-    ...Array(3).map(
-        (_, index) => [1.25 + index * 2.5, `${"A".repeat(4 - index)}カップ`, "ちっぱい。冒険者にはぴったり。"] as const,
+    ...rangeArray(0, 3).map(
+        index => [1.25 + index * 2.5, `${"A".repeat(4 - index)}カップ`, "ちっぱい。冒険者にはぴったり。"] as const,
     ),
-    ...Array(26).map(
-        (_, index) =>
+    ...rangeArray(0, 26).map(
+        index =>
             [1.25 + (index + 3) * 2.5, `${String.fromCharCode(achar + index)}カップ`, descriptions[index][1]] as const,
     ),
-    ...Array(4).map(
-        (_, index) =>
+    ...rangeArray(0, 4).map(
+        index =>
             [
                 1.25 + (index + 29) * 2.5,
                 `${"Z".repeat(index + 1)}カップ`,
