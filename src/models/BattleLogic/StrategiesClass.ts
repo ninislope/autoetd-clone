@@ -5,6 +5,8 @@ import { ActorClass } from "./ActorClass";
 import { targetting, action, condition } from "../../masters/strategy";
 import { Strategy, FixedStrategy } from "./Strategy";
 import { extendsArray } from "../../util/extendsArray";
+import { StrategyPrepareParameterClass } from "./StrategyPrepareParameterClass";
+import { StrategyAimedParameterClass } from "./StrategyAimedParameterClass";
 
 @extendsArray()
 export class StrategiesClass extends Array<Strategy> {
@@ -27,22 +29,27 @@ export class StrategiesClass extends Array<Strategy> {
         }));
     }
 
-    action(battle: BattleClass, battler: ActorClass, turn: number): DungeonActionResultContent[] {
+    action(battle: BattleClass, actor: ActorClass, turn: number): DungeonActionResultContent[] {
         for (let i = 0; i < this.length; ++i) {
             const fixedStrategy = this.fixedStrategies[i];
-            if (fixedStrategy.condition.calc({ battle, battler, battlerParameter: battler, turn })) {
-                const targets = battle
-                    .lastField()
-                    .mapActors(fixedStrategy.targetting.calc({ battle, battler, battlerParameter: battler, turn }));
-                return fixedStrategy.action.calc({
-                    battle,
-                    battler,
-                    battlerParameter: battler,
-                    targets,
-                    targetParameters: targets,
-                    turn,
-                    actionId: fixedStrategy.source.action.id,
-                });
+            const prepareParam = new StrategyPrepareParameterClass({
+                battle,
+                actorParameter: actor,
+                turn,
+                lastField: battle.lastField(),
+            });
+            if (fixedStrategy.condition.calc(prepareParam)) {
+                const targets = battle.lastField().mapActors(fixedStrategy.targetting.calc(prepareParam));
+                return fixedStrategy.action.calc(
+                    new StrategyAimedParameterClass({
+                        battle,
+                        actorParameter: actor,
+                        targetParameters: targets,
+                        turn,
+                        actionId: fixedStrategy.source.action.id,
+                        lastField: battle.lastField(),
+                    }),
+                );
             }
         }
         return [];

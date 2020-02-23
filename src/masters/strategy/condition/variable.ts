@@ -4,10 +4,10 @@ import { battleStatus } from "../optionsDefinition";
 import { strategyConditionSource } from "./helper";
 
 export const variable = strategyConditionSource(battleStatus)(({ variableKey, rate, op }) => ({
-    calc: ({ battler }) =>
+    calc: ({ actor }) =>
         opBool(
-            battler.effectivePerson.variable[variableKey],
+            actor.effectivePerson.variable[variableKey],
             op,
-            (actorVariableMax(variableKey, battler.effectivePerson) * rate) / 100,
+            (actorVariableMax(variableKey, actor.effectivePerson) * rate) / 100,
         ),
 }));

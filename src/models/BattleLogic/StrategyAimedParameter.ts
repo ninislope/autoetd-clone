@@ -1,8 +1,8 @@
-import { ActorsClass } from "./ActorsClass";
-import { StrategyAimedBaseParameter } from "./StrategyAimedBaseParameter";
-import { ActorClass } from "./ActorClass";
+import { StrategyActionId } from "./StrategyActionId";
+import { StrategyPrepareParameter } from "./StrategyPrepareParameter";
+import { ActorParameter } from "./ActorParameter";
 
-export interface StrategyAimedParameter extends StrategyAimedBaseParameter {
-    battler: ActorClass;
-    targets: ActorsClass;
+export interface StrategyAimedParameter extends StrategyPrepareParameter {
+    targetParameters: ActorParameter[];
+    actionId: StrategyActionId;
 }

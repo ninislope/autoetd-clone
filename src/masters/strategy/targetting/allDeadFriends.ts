@@ -6,9 +6,9 @@ export const allDeadFriends = strategyTargettingSource(
     none.definition,
 )(() => ({
     name: "全ての味方戦闘不能者に",
-    calc: ({ battle, battler }) =>
+    calc: ({ battle, actor }) =>
         battle
             .lastField()
-            .battlers(battler.type)
+            .battlers(actor.type)
             .dead(),
 }));

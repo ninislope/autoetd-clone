@@ -4,7 +4,7 @@ import { StrategyTargettingId } from "./StrategyTargettingId";
 import { StrategyActionId } from "./StrategyActionId";
 import { condition, targetting } from "../../masters/strategy";
 import { AllStrategyTargettingType, StrategyTargettingType } from "./StrategyTargettingType";
-import { StrategyPrepareParameter } from "./StrategyPrepareParameter";
+import { StrategyPrepareParameterClass } from "./StrategyPrepareParameterClass";
 import { ActionElement } from "../ActionElement";
 import { ActorVariable } from "../ActorVariable";
 import {
@@ -21,7 +21,7 @@ import {
 } from "./StrategyOptionDefinition";
 import { Exercises } from "../Exercises";
 import { ActorParameter } from "./ActorParameter";
-import { StrategyAimedParameter } from "./StrategyAimedParameter";
+import { StrategyAimedParameterClass } from "./StrategyAimedParameterClass";
 
 export type StrategyConditionOptions<Id extends StrategyConditionId> = StrategyOptionTypeFromDefinition<
     ReturnType<typeof condition[Id]["optionsDefinition"]>["definition"]
@@ -78,7 +78,7 @@ export interface StrategyConditionSource<
 }
 
 export interface StrategyCondition {
-    calc: (param: StrategyPrepareParameter) => boolean;
+    calc: (param: StrategyPrepareParameterClass) => boolean;
     name?: string;
 }
 
@@ -104,13 +104,13 @@ export interface StrategyTargettingSource<
 }
 
 export interface StrategyTargetting {
-    calc: (param: StrategyPrepareParameter) => ActorParameter[];
+    calc: (param: StrategyPrepareParameterClass) => ActorParameter[];
     name: string;
     caution?: string;
 }
 
 export interface StrategyAction {
-    calc: (param: StrategyAimedParameter) => DungeonActionResultContent[];
+    calc: (param: StrategyAimedParameterClass) => DungeonActionResultContent[];
     name: string;
     description: string;
     targettingTypes: readonly StrategyTargettingTypeWithCount[];

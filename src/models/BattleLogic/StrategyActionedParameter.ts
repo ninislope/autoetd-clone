@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { StrategyAimedParameter } from "./StrategyAimedParameter";
 import { ActorVariable } from "../ActorVariable";
+import { StrategyAimedParameter } from "./StrategyAimedParameter";
 
 export interface StrategyActionedParameter extends StrategyAimedParameter, Partial<ActorVariable> {}

@@ -7,15 +7,15 @@ export const self = strategyTargettingSource(
     none.definition,
 )(({ maxCount }) => ({
     name: maxCount === 1 ? "自分に" : `自分とランダムな味方${maxCount - 1}人に`,
-    calc: ({ battle, battler }) => {
-        const { type } = battler;
+    calc: ({ battle, actor }) => {
+        const { type } = actor;
         const targets = battle
             .lastField()
             .battlers(type)
             .living()
-            .filter(actor => actor.person.id !== battler.person.id);
+            .filter(targetActor => targetActor.person.id !== actor.person.id);
 
         const indexes = chooseRandomIndexes(targets.length, maxCount - 1);
-        return [battler, ...indexes.map(index => targets[index])];
+        return [actor, ...indexes.map(index => targets[index])];
     },
 }));

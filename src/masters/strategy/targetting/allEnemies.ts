@@ -6,9 +6,9 @@ export const allEnemies = strategyTargettingSource(
     none.definition,
 )(() => ({
     name: "全ての敵に",
-    calc: ({ battle, battler }) =>
+    calc: ({ battle, actor }) =>
         battle
             .lastField()
-            .battlers(battler.opponentType())
+            .battlers(actor.opponentType())
             .living(),
 }));

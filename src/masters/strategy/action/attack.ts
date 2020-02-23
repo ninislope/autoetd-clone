@@ -21,9 +21,9 @@ export const attack: StrategyAction = {
         for (const target of param.targets) {
             actionResults.next((ret, params) =>
                 ret(
-                    params.battler.person.triggerEffect("preAction", {
+                    params.actor.person.triggerEffect("preAction", {
                         ...params,
-                        field: params.resultField,
+                        field: params.lastField,
                         action: attack,
                     }),
                 ),
@@ -34,46 +34,45 @@ export const attack: StrategyAction = {
             // 二カ所以上だと格段に弱体化が跳ね上がる
             // 発情は集中力に寄与＆一定確率でうずいて弱体化
             // TODO: 失敗判定など
-            let succeed = actionResults.next((ret, { battler, resultField }) => {
-                const success = battler.effectivePerson.variable.ep - 80 < Math.random() * 20;
+            let succeed = actionResults.next((ret, { actor, lastField }) => {
+                const success = actor.effectivePerson.variable.ep - 80 < Math.random() * 20;
                 if (success) return true;
                 ret({
                     messages: [
-                        `${battler.person.name}は快感で集中できず攻撃失敗してしまった！`,
+                        `${actor.person.name}は快感で集中できず攻撃失敗してしまった！`,
                         `${target.person.name}は余裕の表情だ。`,
                     ],
-                    resultField,
+                    resultField: lastField,
                 });
                 return false;
             });
             if (!succeed) continue;
 
-            succeed = actionResults.next((ret, { battler, resultField }) => {
+            succeed = actionResults.next((ret, { actor, lastField }) => {
                 // TODO: 命中の式
                 const hit =
-                    battler.person.battleStatus.agi + battler.person.battleStatus.hit - target.person.battleStatus.agi >
-                    0;
+                    actor.person.battleStatus.agi + actor.person.battleStatus.hit - target.person.battleStatus.agi > 0;
                 if (hit) return true;
                 ret({
                     messages: [
-                        `${battler.person.name}の攻撃は外れた！`,
+                        `${actor.person.name}の攻撃は外れた！`,
                         `${target.person.name}は攻撃をかわしダメージを受けなかった。`,
                     ],
-                    resultField,
+                    resultField: lastField,
                 });
                 return false;
             });
             if (!succeed) continue;
 
-            actionResults.next((ret, { battler, resultField, turn }) => {
+            actionResults.next((ret, { actor, lastField, turn }) => {
                 const damage = Math.floor(
-                    ((battler.person.battleStatus.atk / 2) * 1 - target.person.battleStatus.def / 4) *
+                    ((actor.person.battleStatus.atk / 2) * 1 - target.person.battleStatus.def / 4) *
                         (Math.random() * 0.2 + 1),
                 );
                 if (damage) {
                     const beforeHp = target.person.variable.hp;
-                    const beforeHp2 = resultField[target.type][target.index].variable.hp;
-                    resultField = produce(resultField, next => {
+                    const beforeHp2 = lastField[target.type][target.index].variable.hp;
+                    lastField = produce(lastField, next => {
                         const { hp } = next[target.type][target.index].variable;
                         next[target.type][target.index].variable.hp = Math.max(0, Math.ceil(hp - damage));
                     });
@@ -91,22 +90,22 @@ export const attack: StrategyAction = {
                         */
                     ret({
                         messages: [
-                            `${battler.person.name}の攻撃！`,
+                            `${actor.person.name}の攻撃！`,
                             `${target.person.name}は${damage}ダメージを受けた！` +
                                 `[${target.person.variable.hp} : ${beforeHp} : ${beforeHp2} -> ${
-                                    resultField[target.type][target.index].variable.hp
+                                    lastField[target.type][target.index].variable.hp
                                 }]`,
                         ],
-                        resultField,
+                        resultField: lastField,
                     });
                     return;
                 }
                 ret({
                     messages: [
-                        `ターン${turn}: ${battler.person.name}の攻撃は効果が無い！`,
+                        `ターン${turn}: ${actor.person.name}の攻撃は効果が無い！`,
                         `${target.person.name}はダメージを受けなかった。`,
                     ],
-                    resultField,
+                    resultField: lastField,
                 });
             });
         }

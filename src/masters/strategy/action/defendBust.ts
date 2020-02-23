@@ -15,7 +15,7 @@ export const defendBust: StrategyAction = {
         lower: 50,
     },
     targettingTypes: [{ select: "selectable", for: "enemies", maxCount: 1 }],
-    calc: ({ battle, battler, targets, turn }) => {
+    calc: ({ battle, actor: battler, targets, turn }) => {
         const results: DungeonActionResultContent[] = [];
         targets.reduce((field, target) => {
             // battler.person.sexualStatus.sensitivity;

@@ -8,8 +8,8 @@ export const selectableEnemies = strategyTargettingSource(
     battleStatus.definition,
 )(({ maxCount }, options) => ({
     name: `${strategyOptionDefinitionT(battleStatus.definition(), options)} 敵${maxCount}体に`,
-    calc: ({ battle, battler }) => {
-        const type = battler.opponentType();
+    calc: ({ battle, actor }) => {
+        const type = actor.opponentType();
         const targets = battleStatus.filter(options)(
             battle
                 .lastField()

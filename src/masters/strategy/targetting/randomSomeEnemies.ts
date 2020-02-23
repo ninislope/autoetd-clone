@@ -7,8 +7,8 @@ export const randomSomeEnemies = strategyTargettingSource(
     none.definition,
 )(({ maxCount }) => ({
     name: `ランダムな敵${maxCount}体に`,
-    calc: ({ battle, battler }) => {
-        const type = battler.opponentType();
+    calc: ({ battle, actor }) => {
+        const type = actor.opponentType();
         const targets = battle
             .lastField()
             .battlers(type)
