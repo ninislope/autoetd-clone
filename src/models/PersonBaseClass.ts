@@ -29,7 +29,10 @@ export abstract class PersonBaseClass implements Person {
 
     readonly equipments: ActorEquipmentsClass;
 
-    abstract readonly isEffective: boolean;
+    // eslint-disable-next-line class-methods-use-this
+    get isEffective() {
+        return false;
+    }
 
     constructor(person: Person) {
         this.id = person.id;

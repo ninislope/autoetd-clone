@@ -4,6 +4,7 @@
         "module": "esnext",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
+        "useDefineForClassFields": true,
         "sourceMap": true,
         "strict": true,
         "forceConsistentCasingInFileNames": true,
