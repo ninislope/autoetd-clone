@@ -2,17 +2,14 @@ import { createStore, compose, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
 import reducer from "./modules";
 import rootSaga from "./sagas";
-import DevTools from "./components/DevTools";
-import { isProduction, present } from "./util";
+import { isProduction } from "./util";
 
 const { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ } = window as any;
 const composeEnhancers = isProduction ? compose : __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const instrument = __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || isProduction ? undefined : DevTools?.instrument();
-
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(reducer, composeEnhancers(...[applyMiddleware(sagaMiddleware), instrument].filter(present)));
+const store = createStore(reducer, composeEnhancers(applyMiddleware(sagaMiddleware)));
 
 let sagaTask = sagaMiddleware.run(rootSaga);
 
