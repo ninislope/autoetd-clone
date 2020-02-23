@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 import { immerable } from "immer";
-import _ from "lodash";
+import uniqBy from "lodash/uniqBy";
 import { lastOf } from "../../util";
 import { ActorParametersClass } from "./ActorParametersClass";
 import { DungeonActionResultClass } from "./DungeonActionResultClass";
@@ -33,7 +33,7 @@ export class DungeonActionResultsClass extends Array<DungeonActionResultClass> {
 
     actedBattlers() {
         return new ActorParametersClass(
-            ..._.uniqBy(
+            ...uniqBy(
                 this.map(result => result.owner),
                 battler => `${battler.type}-${battler.index}`,
             ),
