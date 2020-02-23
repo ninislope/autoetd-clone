@@ -24,6 +24,13 @@
   },
   "homepage": "https://github.com/ninislope/autoetd-clone#readme",
   "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "@babel/preset-typescript": "^7.8.3",
     "@hot-loader/react-dom": "^16.11.0",
     "@types/lodash": "^4.14.149",
     "@types/react": "^16.9.22",
@@ -33,6 +40,7 @@
     "@types/redux-devtools-dock-monitor": "^1.1.33",
     "@types/webpack": "^4.41.6",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "babel-loader": "^8.0.6",
     "camelcase": "^5.3.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript": "^7.0.0",
@@ -57,6 +65,7 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "core-js": "^3.6.4",
     "immer": "^5.3.6",
     "lodash": "^4.17.15",
     "react": "^16.12.0",
