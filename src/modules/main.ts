@@ -1,8 +1,9 @@
 import { reduxHelper } from "./reduxHelper";
 // eslint-disable-next-line import/named
-import { MainStore, SceneId, BattleClass } from "../models";
+import { MainStore, SceneId, BattleClass, PersonsClass } from "../models";
 import * as friends from "../masters/person/friends";
 import * as enemies from "../masters/person/enemies";
+import { asClass } from "../util";
 
 const { createActions, action, reduceAction } = reduxHelper<MainStore>({
     currentScene: "dungeon",
@@ -46,6 +47,7 @@ const { reducer, actionCreators, actionTypes } = createActions("main", {
             if (state.battle) {
                 battle = state.battle;
             } else {
+                if (!asClass(state.persons, PersonsClass).living().length) return state;
                 // TODO: 確率でバトル始まる
                 if (Math.random() < 0.5) {
                     return {
