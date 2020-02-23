@@ -1,4 +1,4 @@
-import { ExerciseResponse } from "./ExerciseResponses";
+import { ExerciseResponse } from "./ExerciseResponse";
 import { PartId } from "./PartId";
 import { genSwitcher } from "../util";
 import { ActorSexualStatus } from "./ActorSexualStatus";
@@ -33,6 +33,6 @@ export function exerciseResponseT(partId: PartId, status: ActorSexualStatus, res
     const rub = rubSwitcher(res.rub);
     if (rub) return `${personPartT(partId, status)}が${rub}${ep}`;
     const shake = shakeSwitcher(res.size);
-    if (rub) return `${personPartT(partId, status)}が${shake}${ep}`;
+    if (shake) return `${personPartT(partId, status)}が${shake}${ep}`;
     return "";
 }

@@ -1,223 +1,67 @@
 import { PartId } from "./PartId";
-import { Rub } from "./ActorSexualStatus/Rub";
-import { Sensitivity } from "./ActorSexualStatus/Sensitivity";
 import { partIds } from "./partIds";
-import { Size, isSizePart } from "./ActorSexualStatus/Size";
+import { isSizePart } from "./ActorSexualStatus/Size";
 import { Exercises } from "./Exercises";
 import { canonicalExercise } from "./canonicalExercise";
+import { zeroCut } from "../util";
+import { ExerciseResponseFactor, exerciseResponseCoefficients } from "./exerciseResponseCoefficients";
+import {
+    ExerciseResponseParameterKey,
+    ExerciseResponseParameter,
+    ExerciseResponse,
+    ExerciseResponsesParameter,
+    ExerciseResponses,
+} from "./ExerciseResponse";
 
-export interface ExerciseResponse {
-    ep: number;
-    /** 揺れ=サイズ */
-    size: number;
-    /** 擦れ */
-    rub: number;
+function calcExerciseResponseFactor(
+    key: ExerciseResponseParameterKey,
+    params: ExerciseResponseParameter,
+    factor: ExerciseResponseFactor | undefined,
+) {
+    if (!factor) return params[key];
+    if (factor instanceof Function) return factor(params);
+    const { coefficient, threshold, baseline } = factor;
+    return (coefficient ?? 1) * zeroCut(params[key] - (threshold || 0)) + (baseline || 0);
 }
 
-export type ExerciseResponses = {
-    [Part in PartId]: ExerciseResponse;
-};
-
-interface ExerciseResponseFactorParams {
-    coefficient: number;
-    threshold: number;
-    baseline?: number;
-}
-
-interface ExerciseResponseFactors {
-    rub: ExerciseResponseFactorParams;
-    exercise: ExerciseResponseFactorParams;
-    size: ExerciseResponseFactorParams;
-}
-
-const zeroCut = (num: number) => (num < 0 ? 0 : num);
-
-type ExerciseResponseCalculator = (params: {
-    sensitivity: number;
-    rub: number;
-    exercise: number;
-    size: number;
-}) => ExerciseResponse;
-
-const exerciseResponseCoefficients: { [PId in PartId]: ExerciseResponseFactors | ExerciseResponseCalculator } = {
-    skin: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    brain: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    ear: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    mouth: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    tongue: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    throat: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    bust({ sensitivity, rub, exercise, size }) {
-        const exerciseFactor = zeroCut(exercise - (14 - size));
-        const sizeFactor = 0.25 * zeroCut(size - 13.75);
-        const rubFactor = 1 + rub * 3;
-        return { ep: sensitivity * exerciseFactor * (sizeFactor + rubFactor), size: sizeFactor, rub: rubFactor };
-    }, // { exercise: { coefficient: 1000, threshold: 0 }, size: { coefficient: 0.25, threshold: 13.75 } },
-    nipple: {
-        exercise: { coefficient: 1, threshold: 1 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    hand: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    arm: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    armpit: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    stomach: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    back: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    clitoris: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    urethra: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    bladder: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    labia: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    vagina: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    portio: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    womb: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    ovary: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    anus: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    intestine: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    hip: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    thigh: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0.1, threshold: 0 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    leg: {
-        exercise: { coefficient: 0, threshold: 0 },
-        size: { coefficient: 0, threshold: -1 },
-        rub: { coefficient: 0, threshold: 0 },
-    },
-    foot: ({ exercise }) => ({ ep: zeroCut(exercise - 100) * 0.1, size: 0, rub: exercise }),
-};
-
-function calcExerciseResponseFactor(value: number, { coefficient, threshold, baseline }: ExerciseResponseFactorParams) {
-    return coefficient * zeroCut(value - threshold) + (baseline || 0);
-}
-
-export function exerciseResponse({
-    part,
-    sensitivity,
-    exercise,
-    size,
-    rub = 0,
-}: {
-    part: PartId;
-    sensitivity: number;
-    exercise: number;
-    size: number;
-    rub?: number;
-}): ExerciseResponse {
-    const exerciseResponseCoefficient = exerciseResponseCoefficients[part];
-    if (exerciseResponseCoefficient instanceof Function) {
-        return exerciseResponseCoefficient({ sensitivity, exercise, size, rub });
-    }
-    const { exercise: exerciseFactor, size: sizeFactor, rub: rubFactor } = exerciseResponseCoefficient;
-    const e = calcExerciseResponseFactor(exercise, exerciseFactor);
-    const s = calcExerciseResponseFactor(size, sizeFactor);
-    const r = calcExerciseResponseFactor(rub, rubFactor);
+function filterFloor({ ep, size, rub }: ExerciseResponse) {
     return {
-        ep: sensitivity * e * (s + r),
-        size: s,
-        rub: r,
+        ep: Math.floor(ep),
+        size,
+        rub,
     };
 }
 
-export interface ExerciseResponseParameter {
-    readonly rub: Rub;
-    readonly sensitivity: Sensitivity;
-    readonly size: Size;
+function exerciseResponse(part: PartId, params: ExerciseResponseParameter): ExerciseResponse {
+    const exerciseResponseCoefficient = exerciseResponseCoefficients[part];
+    if (exerciseResponseCoefficient instanceof Function) {
+        return filterFloor(exerciseResponseCoefficient(params));
+    }
+    const {
+        sensitivity: sensitivityFactor,
+        exercise: exerciseFactor,
+        size: sizeFactor,
+        rub: rubFactor,
+        threshold,
+        power,
+    } = exerciseResponseCoefficient || {};
+    const se = calcExerciseResponseFactor("sensitivity", params, sensitivityFactor);
+    const e = calcExerciseResponseFactor("exercise", params, exerciseFactor);
+    const si = calcExerciseResponseFactor("size", params, sizeFactor);
+    const r = calcExerciseResponseFactor("rub", params, rubFactor);
+    const res = {
+        ep: (power ?? 1) * zeroCut(se * e * (si + r) - (threshold || 0)),
+        size: si,
+        rub: r,
+    };
+    return filterFloor(res);
 }
 
-export function exerciseResponses(exercises: Exercises, params: ExerciseResponseParameter) {
+export function exerciseResponses(exercises: Exercises, params: ExerciseResponsesParameter) {
     const partExercises = canonicalExercise(exercises);
     const responce = {} as ExerciseResponses;
     for (const part of partIds) {
-        responce[part] = exerciseResponse({
-            part,
+        responce[part] = exerciseResponse(part, {
             sensitivity: params.sensitivity[part],
             exercise: partExercises[part],
             size: isSizePart(part) ? params.size[part] : 0,

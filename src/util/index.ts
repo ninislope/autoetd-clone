@@ -12,3 +12,4 @@ export * from "./pick";
 export * from "./present";
 export * from "./toExistsHash";
 export * from "./types";
+export * from "./zeroCut";
