@@ -5,10 +5,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
+const mode = process.env.NODE_ENV === "production" ? "production" : "development";
+
 /** @type {import("webpack").Configuration & {devServer: any}} */
 const config = {
     context: __dirname,
-    mode: process.env.NODE_ENV === "production" ? "production" : "development",
+    mode,
     entry: "./src/index.tsx",
     output: {
         path: path.resolve(__dirname, "dist"),
@@ -41,7 +43,7 @@ const config = {
             eslint: true,
         }),
     ],
-    devtool: "eval-source-map",
+    devtool: mode === "development" ? "eval-source-map" : "source-map",
     devServer: {
         hot: true,
     },
