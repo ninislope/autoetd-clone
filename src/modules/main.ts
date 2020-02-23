@@ -47,7 +47,7 @@ const { reducer, actionCreators, actionTypes } = createActions("main", {
             if (state.battle) {
                 battle = state.battle;
             } else {
-                if (!asClass(state.persons, PersonsClass).living().length) return state;
+                if (!asClass(state.persons, PersonsClass).living().length) return { ...state, dungeonLogIndex };
                 // TODO: 確率でバトル始まる
                 if (Math.random() < 0.5) {
                     return {
