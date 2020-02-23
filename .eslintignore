@@ -1,2 +1,3 @@
-src/models/BattleLogic/StrategyTargettingId.ts
-src/components/Scenes/index.ts
+/src/models/BattleLogic/StrategyTargettingId.ts
+/src/components/Scenes/index.ts
+/dist

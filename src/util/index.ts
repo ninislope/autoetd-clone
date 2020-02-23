@@ -5,6 +5,7 @@ export * from "./extendsArray";
 export * from "./genStatePicker";
 export * from "./genSwitcher";
 export * from "./indexBy";
+export * from "./isProduction";
 export * from "./lastOf";
 export * from "./opBool";
 export * from "./opSort";

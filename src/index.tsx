@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import App from "./components/App";
 import store from "./store";
 import DevTools from "./components/DevTools";
+import { isProduction } from "./util";
 
 document.addEventListener("DOMContentLoaded", () => {
     const HotApp = hot(module)(App);
@@ -13,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <Provider store={store}>
             <>
                 <HotApp />
-                <DevTools />
+                {isProduction ? <DevTools /> : undefined}
             </>
         </Provider>,
         document.querySelector("#root"),

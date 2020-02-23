@@ -8,7 +8,7 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 /** @type {import("webpack").Configuration & {devServer: any}} */
 const config = {
     context: __dirname,
-    mode: "development",
+    mode: process.env.NODE_ENV === "production" ? "production" : "development",
     entry: "./src/index.tsx",
     output: {
         path: path.resolve(__dirname, "dist"),

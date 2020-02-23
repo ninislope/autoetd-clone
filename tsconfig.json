@@ -10,7 +10,8 @@
         "experimentalDecorators": true,
         "incremental": true,
         "jsx": "react",
-        "newLine": "LF"
+        "newLine": "LF",
+        "outDir": "dist"
     },
     "exclude": ["node_modules"]
 }
