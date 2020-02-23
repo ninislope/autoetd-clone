@@ -11,6 +11,7 @@ export interface StateEffects extends StateTriggerEffects {
 export interface StateTriggerEffects {
     // TODO: field, fieldInfo(dunceonTurnなど), battleInfo
     readonly active?: (field: StateEffectParameter) => DungeonActionResultContent;
+    readonly deactive?: (field: StateEffectParameter) => DungeonActionResultContent;
     readonly dungeonStart?: (field: StateEffectParameter) => DungeonActionResultContent;
     readonly dungeonEnd?: (field: StateEffectParameter) => DungeonActionResultContent;
     readonly battleStart?: (field: StateEffectParameter) => DungeonActionResultContent;
