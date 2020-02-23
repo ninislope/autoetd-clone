@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <Provider store={store}>
             <>
                 <HotApp />
-                {isProduction ? undefined : <DevTools />}
+                {isProduction || !DevTools ? undefined : <DevTools />}
             </>
         </Provider>,
         document.querySelector("#root"),

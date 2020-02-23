@@ -5,10 +5,10 @@ import rootSaga from "./sagas";
 import DevTools from "./components/DevTools";
 import { isProduction, present } from "./util";
 
-const composeEnhancers = isProduction ? compose : (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ } = window as any;
+const composeEnhancers = isProduction ? compose : __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const instrument =
-    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || isProduction ? undefined : DevTools.instrument();
+const instrument = __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || isProduction ? undefined : DevTools?.instrument();
 
 const sagaMiddleware = createSagaMiddleware();
 
