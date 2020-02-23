@@ -1,3 +1,6 @@
+import "core-js";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import "regenerator-runtime/runtime";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { hot } from "react-hot-loader/root";
 import React from "react";
