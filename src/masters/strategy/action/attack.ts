@@ -27,7 +27,9 @@ export const attack: StrategyAction = {
             // 発情は集中力に寄与＆一定確率でうずいて弱体化
             // TODO: 失敗判定など
             let succeed = actionResults.next((ret, { actor, lastField }) => {
-                const success = actor.effectivePerson.variable.ep - 80 < Math.random() * 20;
+                const randValue = Math.random() * 10000;
+                const epValue = actor.effectivePerson.variable.ep - 80;
+                const success = epValue <= randValue;
                 if (success) return true;
                 ret({
                     messages: [
@@ -101,6 +103,7 @@ export const attack: StrategyAction = {
                 });
             });
         }
+        actionResults.next((ret, params) => ret(params.autoAttach()));
         return actionResults.results;
     },
 };
