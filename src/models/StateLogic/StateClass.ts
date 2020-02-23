@@ -9,6 +9,10 @@ export class StateClass implements State {
         return state.levels.length;
     }
 
+    static clipLevel(state: State, level: number) {
+        return Math.min(StateClass.maxLevel(state), Math.max(0, level));
+    }
+
     readonly id: StateId;
 
     readonly type: StateType;

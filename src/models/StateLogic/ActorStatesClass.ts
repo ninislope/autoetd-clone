@@ -7,8 +7,10 @@ import { PersonClass } from "../PersonClass";
 import { present } from "../../util/present";
 import { StateLevelClass } from "./StateLevelClass";
 import { StateTriggerEffectName, StateTriggerEffects } from "./StateEffects";
-import { BattleFieldClass, DungeonActionResultContentClass } from "../BattleLogic";
+import { BattleFieldClass, StateEffectParameterClass, DungeonActionResultContent } from "../BattleLogic";
 import { asClass, ElementOf } from "../../util";
+import { StateBase } from "./StateBase";
+import { genStateOperationResults } from "./genStateOperationResults";
 
 export class ActorStatesClass {
     [immerable] = true;
@@ -50,63 +52,101 @@ export class ActorStatesClass {
         );
     }
 
-    levelUp(id: StateId, level = 1) {
-        const currentLevel = this.stateLevels[id];
-        if (currentLevel && currentLevel >= StateClass.maxLevel(states[id])) return this;
-        return produce(this, as => {
-            const { stateLevels } = as;
-            if (!stateLevels[id]) stateLevels[id] = 0;
-            stateLevels[id]! += level;
+    static changeLevel(params: StateEffectParameterClass, id: StateId, levelDiff: number) {
+        const currentLevel = params.actor.person.states.stateLevels[id];
+        const nextLevel = StateClass.clipLevel(states[id], (currentLevel || 0) + levelDiff);
+        const g = genStateOperationResults(params);
+        g.next((ret, { actor, lastField, actorParameter }) => {
+            const { person } = actor;
+            ret({
+                resultField: lastField.setActorPerson(
+                    actorParameter,
+                    person.setStateLevels(
+                        produce(person.states.stateLevels, next => {
+                            next[id] = nextLevel;
+                            if (!next[id]) delete next[id];
+                        }),
+                    ),
+                ),
+                messages: [],
+            });
         });
+        if (nextLevel === currentLevel) return g.result;
+        if (currentLevel) {
+            g.next((ret, param) => {
+                const deactive = new StateClass(states[id], id).level(currentLevel)!.effect("active");
+                if (deactive) ret(deactive(param));
+            });
+        }
+        if (nextLevel) {
+            g.next((ret, param) => {
+                const active = new StateClass(states[id], id).level(nextLevel)!.effect("active");
+                if (active) ret(active(param));
+            });
+        }
+        return g.result;
     }
 
-    levelDown(id: StateId, level = 1) {
-        return produce(this, as => {
-            const { stateLevels } = as;
-            if (stateLevels[id]) {
-                stateLevels[id]! -= level;
-                if (stateLevels[id]! <= 0) delete stateLevels[id];
+    static levelUp(params: StateEffectParameterClass, id: StateId, levelDiff = 1) {
+        return this.changeLevel(params, id, levelDiff);
+    }
+
+    static levelDown(params: StateEffectParameterClass, id: StateId, levelDiff = 1) {
+        return this.changeLevel(params, id, -levelDiff);
+    }
+
+    static clear(params: StateEffectParameterClass, id: StateId) {
+        return this.changeLevel(params, id, -Infinity);
+    }
+
+    static autoAttach(params: StateEffectParameterClass) {
+        const { person } = params.actor;
+        const { stateLevels } = person;
+        const g = genStateOperationResults(params);
+        for (const stateId of Object.keys(states).sort() as StateId[]) {
+            const state = states[stateId];
+            const { autoLevel } = state as StateBase;
+            if (autoLevel) {
+                const level = autoLevel(person);
+                const levelDiff = level - (stateLevels[stateId] || 0);
+                if (levelDiff) g.next((ret, param) => ret(this.changeLevel(param, stateId, levelDiff)));
             }
-        });
+        }
+        return g.result;
     }
 
-    clear(id: StateId) {
-        return produce(this, as => {
-            delete as.stateLevels[id];
-        });
-    }
-
-    applyPassive(rawPerson: PersonClass): PersonClass {
-        return this.sortedStateLevels
+    static applyPassive(rawPerson: PersonClass): PersonClass {
+        return rawPerson.states.sortedStateLevels
             .map(state => state.effect("passive"))
             .reduce((person, passive) => (passive ? passive(person) : person), rawPerson);
     }
 
-    triggerEffect<Name extends StateTriggerEffectName>(
-        name: Name,
+    static triggerEffect<Name extends StateTriggerEffectName>(
         params: ElementOf<Parameters<NonNullable<StateTriggerEffects[Name]>>>,
-    ) {
-        return asClass(
-            this.sortedStateLevels
-                .map(state => state.effect(name))
-                .filter(present)
-                .reduce(
-                    (result, effect) => {
-                        const next = effect!({
+        name: Name,
+    ): DungeonActionResultContent {
+        const ParamClass = Object.getPrototypeOf(params).constructor as { new (p: typeof params): typeof params };
+        return params.lastField
+            .actor(params.actorParameter)
+            .person.states.sortedStateLevels.map(state => state.effect(name))
+            .filter(present)
+            .reduce(
+                (result, effect) => {
+                    const next = effect!(
+                        new ParamClass({
                             ...params,
-                            field: result.resultField,
-                        } as any);
-                        return {
-                            resultField: asClass(next.resultField, BattleFieldClass),
-                            messages: result.messages.concat(next.messages),
-                        };
-                    },
-                    {
-                        resultField: params.field,
-                        messages: [] as string[],
-                    },
-                ),
-            DungeonActionResultContentClass,
-        );
+                            lastField: result.resultField,
+                        } as any) as any,
+                    );
+                    return {
+                        resultField: asClass(next.resultField, BattleFieldClass),
+                        messages: result.messages.concat(next.messages),
+                    };
+                },
+                {
+                    resultField: params.lastField,
+                    messages: [] as string[],
+                } as DungeonActionResultContent,
+            );
     }
 }

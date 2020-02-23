@@ -1,9 +1,8 @@
 import { immerable } from "immer";
 import { PersonBaseClass } from "./PersonBaseClass";
 import { EffectivePersonClass } from "./EffectivePersonClass";
-import { StateTriggerEffectName, StateTriggerEffects } from "./StateLogic";
-import { ElementOf } from "../util";
 import { createCacheStore } from "../util/createCacheStore";
+import { ActorStatesClass, ActorEquipmentsClass } from "./StateLogic";
 
 const effectiveCache = createCacheStore<PersonClass, EffectivePersonClass>();
 
@@ -18,15 +17,7 @@ export class PersonClass extends PersonBaseClass {
     get asEffective() {
         return effectiveCache(
             this,
-            () => new EffectivePersonClass(this.equipments.applyPassive(this.states.applyPassive(this))),
+            () => new EffectivePersonClass(ActorEquipmentsClass.applyPassive(ActorStatesClass.applyPassive(this))),
         );
-    }
-
-    triggerEffect<Name extends StateTriggerEffectName>(
-        name: Name,
-        params: ElementOf<Parameters<NonNullable<StateTriggerEffects[Name]>>>,
-    ) {
-        // TODO: equipments or some
-        return this.states.triggerEffect(name, params);
     }
 }

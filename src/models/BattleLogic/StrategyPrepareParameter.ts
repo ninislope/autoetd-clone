@@ -1,10 +1,7 @@
 import { BattleClass } from "./BattleClass";
-import { ActorParameter } from "./ActorParameter";
-import { BattleFieldClass } from "./BattleFieldClass";
+import { StateEffectParameter } from "./StateEffectParameter";
 
-export interface StrategyPrepareParameter {
+export interface StrategyPrepareParameter extends StateEffectParameter {
     battle: BattleClass;
-    lastField: BattleFieldClass;
-    actorParameter: ActorParameter;
     turn: number;
 }

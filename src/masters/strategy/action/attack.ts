@@ -19,15 +19,7 @@ export const attack: StrategyAction = {
     calc: param => {
         const actionResults = genActionResults(param);
         for (const target of param.targets) {
-            actionResults.next((ret, params) =>
-                ret(
-                    params.actor.person.triggerEffect("preAction", {
-                        ...params,
-                        field: params.lastField,
-                        action: attack,
-                    }),
-                ),
-            );
+            actionResults.next((ret, params) => ret(params.triggerEffect("preAction")));
             // 感じた部分で弱体化・弱体化数値が一定以上で確率(抵抗値で上下？)で失敗
             // 疼き・擦れ（乳首・クリ・おまんこ･ふともも等）・揺れ（おっぱい）・ゆるみ（尿道・乳首）・感じ（膀胱）
             // 運動強度で確率が上がる

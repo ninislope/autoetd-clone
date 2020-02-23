@@ -1,25 +1,15 @@
 import { StrategyPrepareParameter } from "./StrategyPrepareParameter";
 import { BattleClass } from "./BattleClass";
-import { ActorParameter } from "./ActorParameter";
-import { BattleFieldClass } from "./BattleFieldClass";
+import { StateEffectParameterClass } from "./StateEffectParameterClass";
 
-export class StrategyPrepareParameterClass implements StrategyPrepareParameter {
+export class StrategyPrepareParameterClass extends StateEffectParameterClass implements StrategyPrepareParameter {
     battle: BattleClass;
-
-    lastField: BattleFieldClass;
-
-    actorParameter: ActorParameter;
 
     turn: number;
 
     constructor(param: StrategyPrepareParameter) {
+        super(param);
         this.battle = param.battle;
-        this.lastField = param.lastField;
-        this.actorParameter = param.actorParameter;
         this.turn = param.turn;
-    }
-
-    get actor() {
-        return this.lastField.actor(this.actorParameter);
     }
 }

@@ -19,8 +19,8 @@ export const base = hiddenState({
                             next.agi = Math.max(5, next.agi * (1 - eBust * 0.01));
                         }),
                     ),
-                preAction({ action, actorParameter: battlerParameter, field }) {
-                    const battler = field.actor(battlerParameter);
+                preAction({ action, actorParameter, lastField }) {
+                    const battler = lastField.actor(actorParameter);
                     const responses = exerciseResponses(action.exercises, battler.effectivePerson.sexualStatus);
                     const messages: string[] = [];
                     const nextPerson = produce(battler.person, next => {
@@ -36,7 +36,7 @@ export const base = hiddenState({
                             }
                         }
                     });
-                    const resultField = field.setActorPerson(battlerParameter, nextPerson);
+                    const resultField = lastField.setActorPerson(actorParameter, nextPerson);
                     return {
                         messages,
                         resultField,

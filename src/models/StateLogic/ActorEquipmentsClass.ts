@@ -178,8 +178,8 @@ export class ActorEquipmentsClass implements ActorEquipments {
         );
     }
 
-    applyPassive(rawPerson: PersonClass): PersonClass {
-        return this.sortedEquipments
+    static applyPassive(rawPerson: PersonClass): PersonClass {
+        return rawPerson.equipments.sortedEquipments
             .map(state => state.effect("passive"))
             .reduce((person, passive) => (passive ? passive(person) : person), rawPerson);
     }
